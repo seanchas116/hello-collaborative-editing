@@ -1,6 +1,14 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { createFile, getFiles } from "./actions";
+import { createFile } from "./actions";
+import { User } from "@supabase/supabase-js";
+import { db } from "@/db/db";
+import { files } from "@/db/schema";
+import { eq } from "drizzle-orm";
+
+export async function getFiles(user: User) {
+  return await db.select().from(files).where(eq(files.ownerId, user.id));
+}
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -10,7 +18,7 @@ export default async function DashboardPage() {
     redirect("/");
   }
 
-  const files = await getFiles();
+  const files = await getFiles(data.user);
 
   return (
     <div>
