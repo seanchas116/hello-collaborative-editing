@@ -2,7 +2,7 @@ import { pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { authUsers } from "./supabase-schema";
 
 export const files = pgTable("files", {
-  id: uuid("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name"),
   ownerId: uuid("ownerId").references(() => authUsers.id, {
     onDelete: "cascade",

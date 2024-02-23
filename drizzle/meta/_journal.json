@@ -8,6 +8,13 @@
       "when": 1708696181655,
       "tag": "0000_material_starjammers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1708702668602,
+      "tag": "0001_bumpy_doomsday",
+      "breakpoints": true
     }
   ]
 }
