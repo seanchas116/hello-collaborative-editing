@@ -1,6 +1,14 @@
-import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  pgSchema,
+  pgTable,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
-export const authUsers = pgTable("auth.users", {
+const authSchema = pgSchema("auth");
+
+export const authUsers = authSchema.table("users", {
   id: uuid("id").primaryKey(),
   email: varchar("email"),
   createdAt: timestamp("createdAt"),

@@ -19,13 +19,13 @@ CREATE TABLE IF NOT EXISTS "permissions" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "files" ADD CONSTRAINT "files_ownerId_auth.users_id_fk" FOREIGN KEY ("ownerId") REFERENCES "auth.users"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "files" ADD CONSTRAINT "files_ownerId_users_id_fk" FOREIGN KEY ("ownerId") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "permissions" ADD CONSTRAINT "permissions_userId_auth.users_id_fk" FOREIGN KEY ("userId") REFERENCES "auth.users"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "permissions" ADD CONSTRAINT "permissions_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

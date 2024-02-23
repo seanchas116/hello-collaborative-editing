@@ -1,5 +1,5 @@
 {
-  "id": "f6182d23-5dde-4662-b4d1-8441003b2f88",
+  "id": "5f904275-2b69-4f5b-bb63-8e6e231a9037",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -43,10 +43,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "files_ownerId_auth.users_id_fk": {
-          "name": "files_ownerId_auth.users_id_fk",
+        "files_ownerId_users_id_fk": {
+          "name": "files_ownerId_users_id_fk",
           "tableFrom": "files",
-          "tableTo": "auth.users",
+          "tableTo": "users",
+          "schemaTo": "auth",
           "columnsFrom": [
             "ownerId"
           ],
@@ -85,10 +86,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "permissions_userId_auth.users_id_fk": {
-          "name": "permissions_userId_auth.users_id_fk",
+        "permissions_userId_users_id_fk": {
+          "name": "permissions_userId_users_id_fk",
           "tableFrom": "permissions",
-          "tableTo": "auth.users",
+          "tableTo": "users",
+          "schemaTo": "auth",
           "columnsFrom": [
             "userId"
           ],
