@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migration:generate": "drizzle-kit generate:pg",
-    "migrate": "dotenv -e .env.local tsx utils/migrate.ts"
+    "migrate:generate": "drizzle-kit generate:pg",
+    "migrate": "dotenv -e .env.local tsx db/migrate.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.1.0",
