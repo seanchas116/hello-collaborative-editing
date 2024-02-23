@@ -6,7 +6,7 @@ import { db } from "@/db/db";
 import { files } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-export async function getFiles(user: User) {
+async function getFiles(user: User) {
   return await db.select().from(files).where(eq(files.ownerId, user.id));
 }
 
