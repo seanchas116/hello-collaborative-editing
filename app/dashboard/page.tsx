@@ -30,7 +30,7 @@ export default async function DashboardPage() {
   return (
     <main className="flex">
       <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm">
-        <div className="bg-gray-100 rounded-full h-10 px-4 flex items-center gap-2 text-gray-400 m-3">
+        <div className="bg-gray-100 rounded-full h-10 px-3 flex items-center gap-2 text-gray-400 m-3">
           <Icon icon="material-symbols:search" />
           Filter
         </div>
