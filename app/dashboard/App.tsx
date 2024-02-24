@@ -2,7 +2,6 @@
 
 import type { File } from "@/db/schema";
 import { Icon } from "@/components/Icon";
-import { format } from "date-fns";
 import Tiptap from "@/components/Tiptap";
 import { ReactTimeAgo } from "@/components/TimeAgo";
 
