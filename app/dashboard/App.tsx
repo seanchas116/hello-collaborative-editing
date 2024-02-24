@@ -4,7 +4,7 @@ import type { File } from "@/db/schema";
 import { Icon } from "@/components/Icon";
 import Tiptap from "@/components/Tiptap";
 import { ReactTimeAgo } from "@/components/TimeAgo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export const App: React.FC<{
@@ -15,9 +15,9 @@ export const App: React.FC<{
   const router = useRouter();
 
   const [selectedFileID, setSelectedFileID] = useState<string | undefined>();
-  if (fileID !== selectedFileID) {
+  useEffect(() => {
     setSelectedFileID(fileID);
-  }
+  }, [fileID]);
 
   return (
     <main className="flex">
