@@ -4,12 +4,16 @@ import { createFile } from "./actions";
 import { User } from "@supabase/supabase-js";
 import { db } from "@/db/db";
 import { files } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { Icon } from "@/components/Icon";
 import { compareAsc, format } from "date-fns";
 
 async function getFiles(user: User) {
-  return await db.select().from(files).where(eq(files.ownerId, user.id));
+  return await db
+    .select()
+    .from(files)
+    .where(eq(files.ownerId, user.id))
+    .orderBy(desc(files.createdAt));
 }
 
 export default async function DashboardPage() {
