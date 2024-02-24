@@ -51,7 +51,7 @@ export default async function DashboardPage() {
           </div>
         </div>
         <form className="contents" action={createFile}>
-          <button className="bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-full flex items-center gap-2 m-3 mb-0">
+          <button className="bg-gray-800 hover:bg-gray-700 text-white h-10 px-4 rounded-full flex items-center gap-2 m-3 mb-0">
             <Icon icon="icon-park-outline:write" />
             Add Note
           </button>
