@@ -22,7 +22,7 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <h1>Files</h1>
+      <h1>Dashboard</h1>
       <form action={createFile}>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
