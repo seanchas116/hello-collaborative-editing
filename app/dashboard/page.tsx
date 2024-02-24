@@ -15,7 +15,13 @@ async function getFiles(user: User): Promise<File[]> {
     .orderBy(desc(files.createdAt));
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: {
+    file?: string;
+  };
+}) {
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.getUser();
@@ -25,5 +31,7 @@ export default async function DashboardPage() {
 
   const files = await getFiles(data.user);
 
-  return <App files={files} createFile={createFile} />;
+  return (
+    <App files={files} createFile={createFile} fileID={searchParams.file} />
+  );
 }

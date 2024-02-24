@@ -4,11 +4,20 @@ import type { File } from "@/db/schema";
 import { Icon } from "@/components/Icon";
 import Tiptap from "@/components/Tiptap";
 import { ReactTimeAgo } from "@/components/TimeAgo";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const App: React.FC<{
   files: File[];
   createFile(): Promise<void>;
-}> = ({ files, createFile }) => {
+  fileID?: string;
+}> = ({ files, createFile, fileID }) => {
+  const router = useRouter();
+
+  const [selectedFileID, setSelectedFileID] = useState<string | undefined>(
+    fileID
+  );
+
   return (
     <main className="flex">
       <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm">
@@ -21,7 +30,12 @@ export const App: React.FC<{
             {files.map((file) => (
               <button
                 key={file.id}
-                className="flex flex-col items-start text-left gap-2 px-2 py-4 relative"
+                className="flex flex-col items-start text-left gap-2 px-2 py-4 relative aria-pressed:bg-gray-200 rounded-lg"
+                aria-pressed={file.id === selectedFileID}
+                onClick={() => {
+                  setSelectedFileID(file.id);
+                  router.replace(`/dashboard?file=${file.id}`);
+                }}
               >
                 <h2 className="font-medium text-gray-900">{file.name}</h2>
                 <ReactTimeAgo
@@ -29,7 +43,10 @@ export const App: React.FC<{
                   date={file.createdAt!}
                   locale="en-US"
                 />
-                <div className="absolute left-2 bottom-0 right-2 h-px bg-gray-100" />
+                <div
+                  className="absolute left-2 bottom-0 right-2 h-px bg-gray-100"
+                  style={{ opacity: file.id === selectedFileID ? 0 : 1 }}
+                />
               </button>
             ))}
           </div>
