@@ -14,9 +14,10 @@ export const App: React.FC<{
 }> = ({ files, createFile, fileID }) => {
   const router = useRouter();
 
-  const [selectedFileID, setSelectedFileID] = useState<string | undefined>(
-    fileID
-  );
+  const [selectedFileID, setSelectedFileID] = useState<string | undefined>();
+  if (fileID !== selectedFileID) {
+    setSelectedFileID(fileID);
+  }
 
   return (
     <main className="flex">
