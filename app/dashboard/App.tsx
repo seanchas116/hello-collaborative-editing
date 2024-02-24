@@ -4,6 +4,7 @@ import type { File } from "@/db/schema";
 import { Icon } from "@/components/Icon";
 import { format } from "date-fns";
 import Tiptap from "@/components/Tiptap";
+import { ReactTimeAgo } from "@/components/TimeAgo";
 
 export const App: React.FC<{
   files: File[];
@@ -24,9 +25,11 @@ export const App: React.FC<{
                 className="flex flex-col items-start text-left gap-2 px-2 py-4 relative"
               >
                 <h2 className="font-medium text-gray-900">{file.name}</h2>
-                <time className="text-xs text-gray-400">
-                  {format(file.createdAt!, "yyyy/MM/dd")}
-                </time>
+                <ReactTimeAgo
+                  className="text-gray-500 text-xs"
+                  date={file.createdAt!}
+                  locale="en-US"
+                />
                 <div className="absolute left-2 bottom-0 right-2 h-px bg-gray-100" />
               </button>
             ))}
