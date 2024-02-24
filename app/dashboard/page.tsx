@@ -7,6 +7,7 @@ import { files } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { Icon } from "@/components/Icon";
 import { compareAsc, format } from "date-fns";
+import Tiptap from "@/components/Tiptap";
 
 async function getFiles(user: User) {
   return await db
@@ -27,7 +28,7 @@ export default async function DashboardPage() {
   const files = await getFiles(data.user);
 
   return (
-    <main>
+    <main className="flex">
       <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm">
         <div className="bg-gray-100 rounded-full h-10 px-4 flex items-center gap-2 text-gray-400 m-3">
           <Icon icon="material-symbols:search" />
@@ -63,6 +64,11 @@ export default async function DashboardPage() {
           <div className="text-gray-900 text-sm">Jane Doe</div>
         </div>
       </nav>
+      <div className="flex-1 p-16">
+        <div className="max-w-4xl mx-auto">
+          <Tiptap />
+        </div>
+      </div>
     </main>
   );
 }
