@@ -38,7 +38,9 @@ display: none;
 </blockquote>
 `;
 
-const Tiptap = () => {
+const Tiptap: React.FC<{
+  className?: string;
+}> = ({ className }) => {
   const editor = useEditor({
     extensions: [
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -57,7 +59,7 @@ const Tiptap = () => {
     content,
   });
 
-  return <EditorContent editor={editor} />;
+  return <EditorContent editor={editor} className={className} />;
 };
 
 export default Tiptap;

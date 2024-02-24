@@ -14,6 +14,7 @@
     "@iconify/react": "^4.1.1",
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.39.7",
+    "@tailwindcss/typography": "^0.5.10",
     "@tiptap/extension-color": "^2.2.4",
     "@tiptap/extension-list-item": "^2.2.4",
     "@tiptap/extension-text-style": "^2.2.4",
