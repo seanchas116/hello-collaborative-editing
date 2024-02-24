@@ -1,5 +1,6 @@
 import { pgEnum, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { authUsers } from "./supabase-schema";
+import { InferSelectModel } from "drizzle-orm";
 
 export const files = pgTable("files", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -20,3 +21,7 @@ export const permissions = pgTable("permissions", {
   fileId: uuid("fileId").references(() => files.id, { onDelete: "cascade" }),
   type: permissionTypeEnum("type"),
 });
+
+export type File = InferSelectModel<typeof files>;
+export type Permission = InferSelectModel<typeof permissions>;
+export type PermissionType = (typeof permissionTypeEnum.enumValues)[number];

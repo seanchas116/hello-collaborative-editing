@@ -3,13 +3,13 @@ import { createClient } from "@/utils/supabase/server";
 import { createFile } from "./actions";
 import { User } from "@supabase/supabase-js";
 import { db } from "@/db/db";
-import { files } from "@/db/schema";
+import { File, files } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { Icon } from "@/components/Icon";
 import { compareAsc, format } from "date-fns";
 import Tiptap from "@/components/Tiptap";
 
-async function getFiles(user: User) {
+async function getFiles(user: User): Promise<File[]> {
   return await db
     .select()
     .from(files)
