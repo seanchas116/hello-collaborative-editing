@@ -124,6 +124,13 @@ importers:
         version: 5.3.3
 
   packages/worker:
+    dependencies:
+      hono:
+        specifier: ^4.0.6
+        version: 4.0.6
+      yjs:
+        specifier: ^13.6.12
+        version: 13.6.12
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20240222.0
@@ -3158,6 +3165,11 @@ packages:
   /heap@0.2.7:
     resolution: {integrity: sha512-2bsegYkkHO+h/9MGbn6KWcE45cHZgPANo5LXF7EvWdT0yT2EguSVO1nDgU5c8+ZOPwp2vMNa7YFsJhVcDR9Sdg==}
     dev: true
+
+  /hono@4.0.6:
+    resolution: {integrity: sha512-yL8Dp4mNscQj3zqMsmuHRoDoJlbP/3Jjz5HrIcd8a7MEWDr/O8oPgEQx2saVG+NX8mgEeEDQOuG2cgXCc9VuoA==}
+    engines: {node: '>=16.0.0'}
+    dev: false
 
   /ignore@5.3.1:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
