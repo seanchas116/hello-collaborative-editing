@@ -8,6 +8,7 @@ import Collaboration from "@tiptap/extension-collaboration";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { EditorState } from "./EditorState";
+import styled from "styled-components";
 
 const content = `
 <h2>
@@ -40,6 +41,20 @@ display: none;
 </blockquote>
 `;
 
+const StyledEditorContent = styled(EditorContent)`
+  .tiptap {
+    outline: none;
+  }
+
+  .tiptap p.is-editor-empty:first-child::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+`;
+
 export const Editor: React.FC<{
   fileID: string;
   className?: string;
@@ -48,7 +63,7 @@ export const Editor: React.FC<{
 
   const editor = useEditor({
     extensions: [
-      Placeholder.configure({ placeholder: "My Custom Placeholder" }),
+      Placeholder.configure(),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       // @ts-ignore
       TextStyle.configure({ types: [ListItem.name] }),
@@ -71,7 +86,10 @@ export const Editor: React.FC<{
 
   return (
     <div className={twMerge("p-16", className)}>
-      <EditorContent editor={editor} className="max-w-4xl mx-auto prose" />
+      <StyledEditorContent
+        editor={editor}
+        className="max-w-4xl mx-auto prose min-h-full"
+      />
     </div>
   );
 };
