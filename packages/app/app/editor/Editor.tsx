@@ -69,9 +69,7 @@ export const Editor: React.FC<{
 
   return (
     <div className={twMerge("p-16", className)}>
-      <div className="max-w-4xl mx-auto prose">
-        <EditorContent editor={editor} className="max-w-4xl mx-auto prose" />
-      </div>
+      <EditorContent editor={editor} className="max-w-4xl mx-auto prose" />
     </div>
   );
 };
