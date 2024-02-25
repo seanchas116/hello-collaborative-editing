@@ -3,6 +3,7 @@ import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
 import Collaboration from "@tiptap/extension-collaboration";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
@@ -47,6 +48,7 @@ export const Editor: React.FC<{
 
   const editor = useEditor({
     extensions: [
+      Placeholder.configure({ placeholder: "My Custom Placeholder" }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       // @ts-ignore
       TextStyle.configure({ types: [ListItem.name] }),
