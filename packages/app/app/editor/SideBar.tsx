@@ -21,7 +21,7 @@ export const SideBar: React.FC<{
   }, [fileID]);
 
   return (
-    <nav className="w-[256px] bg-gray-100 h-screen flex flex-col text-sm">
+    <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm">
       <div className="bg-gray-200 rounded-full h-10 px-3 flex items-center gap-2 text-gray-400 m-3">
         <Icon icon="material-symbols:search" />
         Filter
@@ -32,7 +32,7 @@ export const SideBar: React.FC<{
             <button
               key={file.id}
               data-file-id={file.id}
-              className="flex flex-col items-start text-left gap-2 p-3 relative aria-pressed:bg-gray-200 rounded-lg"
+              className="flex flex-col items-start text-left gap-2 p-3 relative aria-pressed:bg-gray-200 rounded-xl"
               aria-pressed={file.id === selectedFileID}
               onClick={() => {
                 setSelectedFileID(file.id);
