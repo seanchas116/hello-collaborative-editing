@@ -21,8 +21,8 @@ export const Editor: React.FC<{
 
   return (
     <main className="flex">
-      <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm">
-        <div className="bg-gray-100 rounded-full h-10 px-3 flex items-center gap-2 text-gray-400 m-3">
+      <nav className="w-[256px] bg-gray-100 h-screen flex flex-col text-sm">
+        <div className="bg-gray-200 rounded-full h-10 px-3 flex items-center gap-2 text-gray-400 m-3">
           <Icon icon="material-symbols:search" />
           Filter
         </div>
@@ -31,7 +31,7 @@ export const Editor: React.FC<{
             {files.map((file) => (
               <button
                 key={file.id}
-                className="flex flex-col items-start text-left gap-2 px-2 py-4 relative aria-pressed:bg-gray-200 rounded-lg"
+                className="flex flex-col items-start text-left gap-2 p-3 relative aria-pressed:bg-gray-200 rounded-lg"
                 aria-pressed={file.id === selectedFileID}
                 onClick={() => {
                   setSelectedFileID(file.id);
