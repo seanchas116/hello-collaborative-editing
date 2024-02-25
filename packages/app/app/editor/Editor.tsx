@@ -83,9 +83,12 @@ export const Editor: React.FC<{
         document: editorState.ydoc,
       }),
       CollaborationCursor.configure({
-        provider: {
-          awareness: editorState.awareness,
-        },
+        // Looks like we have to pass non-plain object here, so using a class
+        provider: new (class {
+          get awareness() {
+            return editorState.awareness;
+          }
+        })(),
         user: {
           name: "Cyndi Lauper",
           color: "#f783ac",
