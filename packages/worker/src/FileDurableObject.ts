@@ -60,12 +60,13 @@ export class FileDurableObject {
 		this.sessions.add(ws);
 		ws.send(encodeMessage('update', update));
 
-		ws.addEventListener('close', () => {
+		const onCloseOrError = () => {
 			this.sessions.delete(ws);
-		});
-		ws.addEventListener('error', () => {
-			this.sessions.delete(ws);
-		});
+			// TODO: delete awareness
+		};
+
+		ws.addEventListener('close', onCloseOrError);
+		ws.addEventListener('error', onCloseOrError);
 
 		ws.addEventListener('message', async (event) => {
 			if (!(event.data instanceof ArrayBuffer)) {
