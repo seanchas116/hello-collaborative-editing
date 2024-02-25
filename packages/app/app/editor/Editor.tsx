@@ -1,77 +1,69 @@
-"use client";
+import { useEditor, EditorContent } from "@tiptap/react";
+import { Color } from "@tiptap/extension-color";
+import ListItem from "@tiptap/extension-list-item";
+import TextStyle from "@tiptap/extension-text-style";
+import StarterKit from "@tiptap/starter-kit";
+import React from "react";
+import { twMerge } from "tailwind-merge";
 
-import type { File } from "@/db/schema";
-import { Icon } from "@/components/Icon";
-import Tiptap from "@/components/Tiptap";
-import { ReactTimeAgo } from "@/components/TimeAgo";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+const content = `
+<h2>
+  Hi there,
+</h2>
+<p>
+  this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
+</p>
+<ul>
+  <li>
+    That’s a bullet list with one …
+  </li>
+  <li>
+    … or two list items.
+  </li>
+</ul>
+<p>
+  Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
+</p>
+<pre><code class="language-css">body {
+display: none;
+}</code></pre>
+<p>
+  I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
+</p>
+<blockquote>
+  Wow, that’s amazing. Good work, boy! 👏
+  <br />
+  — Mom
+</blockquote>
+`;
 
 export const Editor: React.FC<{
-  files: File[];
-  createFile(): Promise<void>;
-  fileID?: string;
-}> = ({ files, createFile, fileID }) => {
-  const router = useRouter();
-
-  const [selectedFileID, setSelectedFileID] = useState<string | undefined>();
-  useEffect(() => {
-    setSelectedFileID(fileID);
-  }, [fileID]);
+  className?: string;
+}> = ({ className }) => {
+  const editor = useEditor({
+    extensions: [
+      Color.configure({ types: [TextStyle.name, ListItem.name] }),
+      // @ts-ignore
+      TextStyle.configure({ types: [ListItem.name] }),
+      StarterKit.configure({
+        bulletList: {
+          keepMarks: true,
+          keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+        },
+        orderedList: {
+          keepMarks: true,
+          keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+        },
+      }),
+    ],
+    content,
+  });
 
   return (
-    <main className="flex">
-      <nav className="w-[256px] bg-gray-100 h-screen flex flex-col text-sm">
-        <div className="bg-gray-200 rounded-full h-10 px-3 flex items-center gap-2 text-gray-400 m-3">
-          <Icon icon="material-symbols:search" />
-          Filter
-        </div>
-        <div className="flex-1 min-h-0 overflow-y-scroll">
-          <div className="px-3 flex flex-col">
-            {files.map((file) => (
-              <button
-                key={file.id}
-                className="flex flex-col items-start text-left gap-2 p-3 relative aria-pressed:bg-gray-200 rounded-lg"
-                aria-pressed={file.id === selectedFileID}
-                onClick={() => {
-                  setSelectedFileID(file.id);
-                  router.replace(`/editor?file=${file.id}`);
-                }}
-              >
-                <h2 className="font-medium text-gray-900">{file.name}</h2>
-                <ReactTimeAgo
-                  className="text-gray-500 text-xs"
-                  date={file.createdAt!}
-                  locale="en-US"
-                />
-                <div
-                  className="absolute left-2 bottom-0 right-2 h-px bg-gray-100"
-                  style={{ opacity: file.id === selectedFileID ? 0 : 1 }}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-        <button
-          className="bg-gray-800 hover:bg-gray-700 text-white h-10 px-4 rounded-full flex items-center gap-2 m-3 mb-0"
-          onClick={() => createFile()}
-        >
-          <Icon icon="icon-park-outline:write" />
-          Add Note
-        </button>
-        <div className="items-center flex gap-2 p-2 m-3">
-          <img
-            className="w-8 h-8 rounded-2xl"
-            src="https://via.placeholder.com/32x32"
-          />
-          <div className="text-gray-900 text-sm">Jane Doe</div>
-        </div>
-      </nav>
-      <div className="flex-1 p-16">
-        <div className="max-w-4xl mx-auto prose ">
-          <Tiptap />
-        </div>
+    <div className={twMerge("p-16", className)}>
+      <div className="max-w-4xl mx-auto prose">
+        <EditorContent editor={editor} className="max-w-4xl mx-auto prose" />;
       </div>
-    </main>
+    </div>
   );
 };
