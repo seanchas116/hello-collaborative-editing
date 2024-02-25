@@ -10,7 +10,10 @@ export class EditorState {
     this.ydoc = new Y.Doc();
 
     const ws = new WebSocket(
-      `ws://${process.env.NEXT_PUBLIC_CF_WORKER_URL}/file?id=${fileID}`
+      `wss://${process.env.NEXT_PUBLIC_CF_WORKER_URL!.replace(
+        "https://",
+        ""
+      )}/file?id=${fileID}`
     );
     ws.binaryType = "arraybuffer";
 
@@ -18,6 +21,8 @@ export class EditorState {
       console.log("connected");
     });
     ws.addEventListener("message", (event) => {
+      console.log("message", event.data);
+
       const data = event.data;
       if (!(data instanceof ArrayBuffer)) {
         return;

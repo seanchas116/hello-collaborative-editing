@@ -9,6 +9,8 @@ const messageTypes = {
 export class FileDurableObject {
 	constructor(state: DurableObjectState, env: Bindings) {}
 
+	readonly ydoc = new Y.Doc();
+
 	/**
 	 * The Durable Object fetch handler will be invoked when a Durable Object instance receives a
 	 * 	request from a Worker via an associated stub
@@ -31,7 +33,13 @@ export class FileDurableObject {
 		ws.accept();
 		this.sessions.add(ws);
 
-		const ydoc = new Y.Doc();
+		{
+			const update = Y.encodeStateAsUpdate(this.ydoc);
+			const array = new Uint8Array(update.length + 1);
+			array[0] = messageTypes.update;
+			array.set(update, 1);
+			ws.send(array);
+		}
 
 		ws.addEventListener('close', () => {
 			this.sessions.delete(ws);
@@ -52,12 +60,14 @@ export class FileDurableObject {
 					// ...
 					break;
 				case messageTypes.update:
-					Y.applyUpdate(ydoc, array.subarray(1));
+					Y.applyUpdate(this.ydoc, array.subarray(1));
 					break;
 			}
 		});
 
-		ydoc.on('update', (update: Uint8Array) => {
+		this.ydoc.on('update', (update: Uint8Array) => {
+			console.log('update', update.length);
+
 			const array = new Uint8Array(update.length + 1);
 			array[0] = messageTypes.update;
 			array.set(update, 1);

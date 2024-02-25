@@ -8,6 +8,8 @@ const app = new Hono<{
 
 // GET /file?id=123
 app.get('/file', async (c) => {
+	console.log('get /file');
+
 	const fileID = c.req.queries('id');
 	if (fileID?.length !== 1) {
 		return c.text('id is required', 404);
