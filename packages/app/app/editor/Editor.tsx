@@ -10,6 +10,16 @@ import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { EditorState } from "./EditorState";
 import styled from "styled-components";
+import twColors from "tailwindcss/colors";
+
+const userColors = [
+  twColors.blue[500],
+  twColors.green[500],
+  twColors.pink[500],
+  twColors.purple[500],
+  twColors.red[500],
+  twColors.yellow[500],
+];
 
 const content = `
 <h2>
@@ -63,12 +73,13 @@ const StyledEditorContent = styled(EditorContent)`
   }
   .collaboration-cursor__label {
     position: absolute;
+    left: -1px;
     bottom: 1em;
     width: max-content;
     color: white;
-    padding: 2px 4px;
-    border-radius: 4px;
+    padding: 0 4px;
     font-size: 12px;
+    font-weight: bold;
   }
 `;
 
@@ -107,7 +118,7 @@ export const Editor: React.FC<{
         })(),
         user: {
           name: "Cyndi Lauper",
-          color: "#f783ac",
+          color: userColors[editorState.ydoc.clientID % userColors.length],
         },
       }),
     ],
