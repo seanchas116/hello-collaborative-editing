@@ -54,6 +54,22 @@ const StyledEditorContent = styled(EditorContent)`
     height: 0;
     pointer-events: none;
   }
+
+  .collaboration-cursor__caret {
+    display: inline-block;
+    height: 1em;
+    border: 1px solid;
+    position: relative;
+  }
+  .collaboration-cursor__label {
+    position: absolute;
+    bottom: 1em;
+    width: max-content;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
 `;
 
 export const Editor: React.FC<{
