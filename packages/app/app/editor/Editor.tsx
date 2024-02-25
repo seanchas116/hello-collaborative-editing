@@ -125,11 +125,16 @@ export const Editor: React.FC<{
   });
 
   return (
-    <div className={twMerge("p-16", className)}>
-      <StyledEditorContent
-        editor={editor}
-        className="max-w-4xl mx-auto prose min-h-full"
-      />
+    <div className={twMerge("px-16", className)}>
+      <div className="flex">
+        <button className="ml-auto bg-blue-500 px-3 py-1.5 text-sm text-white rounded-full m-5 font-semibold">
+          Share
+        </button>
+      </div>
+      <div className="max-w-4xl mx-auto mt-12">
+        <h1 className="font-bold text-3xl mb-12">TODO: Show Title</h1>
+        <StyledEditorContent editor={editor} className="prose" />
+      </div>
     </div>
   );
 };
