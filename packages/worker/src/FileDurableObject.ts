@@ -23,10 +23,17 @@ function decodeMessage(data: Uint8Array): { type: keyof typeof messageTypes; dat
 	throw new Error('Invalid message type');
 }
 
-export class FileDurableObject {
-	constructor(state: DurableObjectState, env: Bindings) {}
+// From y-leveldb
+const PREFERRED_TRIM_SIZE = 500;
 
-	readonly ydoc = new Y.Doc();
+export class FileDurableObject {
+	constructor(state: DurableObjectState, env: Bindings) {
+		this.state = state;
+		this.env = env;
+	}
+
+	readonly state: DurableObjectState;
+	readonly env: Bindings;
 
 	/**
 	 * The Durable Object fetch handler will be invoked when a Durable Object instance receives a
@@ -47,13 +54,11 @@ export class FileDurableObject {
 	}
 
 	private async handleSession(ws: WebSocket) {
+		const update = await this.loadUpdates();
+
 		ws.accept();
 		this.sessions.add(ws);
-
-		{
-			const update = Y.encodeStateAsUpdate(this.ydoc);
-			ws.send(encodeMessage('update', update));
-		}
+		ws.send(encodeMessage('update', update));
 
 		ws.addEventListener('close', () => {
 			this.sessions.delete(ws);
@@ -62,7 +67,7 @@ export class FileDurableObject {
 			this.sessions.delete(ws);
 		});
 
-		ws.addEventListener('message', (event) => {
+		ws.addEventListener('message', async (event) => {
 			if (!(event.data instanceof ArrayBuffer)) {
 				return;
 			}
@@ -77,18 +82,54 @@ export class FileDurableObject {
 					}
 					break;
 				case 'update':
-					Y.applyUpdate(this.ydoc, message.data);
+					for (const session of this.sessions) {
+						if (session !== ws) {
+							session.send(event.data);
+						}
+					}
+					await this.storeUpdate(message.data);
 					break;
 			}
 		});
+	}
 
-		this.ydoc.on('update', (update: Uint8Array) => {
-			console.log('update', update.length);
+	private async storeUpdate(update: Uint8Array) {
+		await this.state.storage.transaction(async (txn) => {
+			let count = ((await txn.get('count')) || 0) as number;
 
-			const message = encodeMessage('update', update);
-			for (const session of this.sessions) {
-				session.send(message);
+			if (count < PREFERRED_TRIM_SIZE) {
+				await txn.put('update-' + count, update);
+				await txn.put('count', count + 1);
+			} else {
+				const updates: Uint8Array[] = [];
+				for (let i = 0; i < count; i++) {
+					const update = await txn.get('update-' + i);
+					if (update instanceof Uint8Array) {
+						updates.push(update);
+					}
+				}
+
+				const update = Y.mergeUpdates(updates);
+
+				await txn.put('update-0', update);
+				await txn.put('count', 1);
 			}
+		});
+	}
+
+	private async loadUpdates() {
+		return await this.state.storage.transaction(async (txn) => {
+			let count = ((await txn.get('count')) || 0) as number;
+
+			const updates: Uint8Array[] = [];
+			for (let i = 0; i < count; i++) {
+				const update = await txn.get('update-' + i);
+				if (update instanceof Uint8Array) {
+					updates.push(update);
+				}
+			}
+
+			return Y.mergeUpdates(updates);
 		});
 	}
 
