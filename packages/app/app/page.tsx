@@ -5,7 +5,7 @@ export default function Home() {
     <main className="w-screen h-screen flex items-center justify-center">
       <div className="flex-col items-center gap-16 flex">
         <div className="flex-col items-center gap-12 flex">
-          <div className="text-center text-gray-900 text-5xl font-medium leading-[4rem]">
+          <div className="text-center text-gray-900 text-5xl font-bold leading-[4rem]">
             Collaborative
             <br />
             Note Taking App Example
@@ -25,14 +25,14 @@ export default function Home() {
         <div className="gap-4 flex">
           <Link
             href="/login"
-            className="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-3xl gap-2.5 flex text-white text-base font-medium"
+            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
           >
             Launch App
           </Link>
           <a
             href="https://github.com/seanchas116/hello-collaborative-editing"
             target="_blank"
-            className="px-6 py-3 rounded-3xl gap-2.5 flex text-gray-900 text-base font-medium"
+            className="px-6 py-3 hover:bg-gray-100 rounded-3xl gap-2.5 flex text-gray-900 text-base font-semibold"
           >
             GitHub
           </a>

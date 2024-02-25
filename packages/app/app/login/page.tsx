@@ -4,7 +4,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen">
       <div className="w-60 h-80 flex-col gap-12 flex">
-        <div className="text-gray-900 text-2xl font-medium text-center">
+        <div className="text-gray-900 text-2xl font-bold text-center">
           Welcome
         </div>
         <form className="flex-col gap-12 flex">
@@ -35,13 +35,13 @@ export default function LoginPage() {
           <div className="self-stretch gap-4 flex">
             <button
               formAction={login}
-              className="h-10 px-4 py-2 bg-gray-800 rounded-2xl text-white flex-1"
+              className="h-10 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-full font-semibold text-white flex-1"
             >
               Sign In
             </button>
             <button
               formAction={signup}
-              className="h-10 px-4 py-2 bg-gray-800 rounded-2xl text-white flex-1"
+              className="h-10 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-full font-semibold text-white flex-1"
             >
               Sign Up
             </button>
