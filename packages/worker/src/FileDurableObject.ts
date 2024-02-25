@@ -6,6 +6,23 @@ const messageTypes = {
 	awareness: 2,
 } as const;
 
+function encodeMessage(type: keyof typeof messageTypes, data: Uint8Array): Uint8Array {
+	const array = new Uint8Array(data.length + 1);
+	array[0] = messageTypes[type];
+	array.set(data, 1);
+	return array;
+}
+
+function decodeMessage(data: Uint8Array): { type: keyof typeof messageTypes; data: Uint8Array } {
+	const typeValue = data[0];
+	for (const type of Object.keys(messageTypes) as (keyof typeof messageTypes)[]) {
+		if (messageTypes[type] === typeValue) {
+			return { type, data: data.subarray(1) };
+		}
+	}
+	throw new Error('Invalid message type');
+}
+
 export class FileDurableObject {
 	constructor(state: DurableObjectState, env: Bindings) {}
 
@@ -35,10 +52,7 @@ export class FileDurableObject {
 
 		{
 			const update = Y.encodeStateAsUpdate(this.ydoc);
-			const array = new Uint8Array(update.length + 1);
-			array[0] = messageTypes.update;
-			array.set(update, 1);
-			ws.send(array);
+			ws.send(encodeMessage('update', update));
 		}
 
 		ws.addEventListener('close', () => {
@@ -49,18 +63,17 @@ export class FileDurableObject {
 		});
 
 		ws.addEventListener('message', (event) => {
-			const data = event.data;
-			if (!(data instanceof ArrayBuffer)) {
+			if (!(event.data instanceof ArrayBuffer)) {
 				return;
 			}
+			const message = decodeMessage(new Uint8Array(event.data));
 
-			const array = new Uint8Array(data);
-			switch (array[0]) {
-				case messageTypes.awareness:
+			switch (message.type) {
+				case 'awareness':
 					// ...
 					break;
-				case messageTypes.update:
-					Y.applyUpdate(this.ydoc, array.subarray(1));
+				case 'update':
+					Y.applyUpdate(this.ydoc, message.data);
 					break;
 			}
 		});
@@ -68,12 +81,9 @@ export class FileDurableObject {
 		this.ydoc.on('update', (update: Uint8Array) => {
 			console.log('update', update.length);
 
-			const array = new Uint8Array(update.length + 1);
-			array[0] = messageTypes.update;
-			array.set(update, 1);
-
+			const message = encodeMessage('update', update);
 			for (const session of this.sessions) {
-				session.send(array);
+				session.send(message);
 			}
 		});
 	}

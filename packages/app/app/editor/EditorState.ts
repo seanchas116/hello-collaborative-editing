@@ -19,6 +19,13 @@ export class EditorState {
 
     ws.addEventListener("open", () => {
       console.log("connected");
+
+      this.ydoc.on("update", (update: Uint8Array) => {
+        const array = new Uint8Array(update.length + 1);
+        array[0] = messageTypes.update;
+        array.set(update, 1);
+        ws.send(array);
+      });
     });
     ws.addEventListener("message", (event) => {
       console.log("message", event.data);
@@ -37,13 +44,6 @@ export class EditorState {
           Y.applyUpdate(this.ydoc, array.subarray(1));
           break;
       }
-    });
-
-    this.ydoc.on("update", (update: Uint8Array) => {
-      const array = new Uint8Array(update.length + 1);
-      array[0] = messageTypes.update;
-      array.set(update, 1);
-      ws.send(array);
     });
   }
 
