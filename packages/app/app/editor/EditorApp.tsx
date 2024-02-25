@@ -1,8 +1,13 @@
 "use client";
 
 import type { File } from "@/db/schema";
-import { Editor } from "./Editor";
 import { SideBar } from "./SideBar";
+
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(() => import("./Editor").then((m) => m.Editor), {
+  ssr: false,
+});
 
 export const EditorApp: React.FC<{
   files: File[];
