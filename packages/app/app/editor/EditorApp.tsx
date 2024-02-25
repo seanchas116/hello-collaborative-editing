@@ -12,7 +12,7 @@ export const EditorApp: React.FC<{
   return (
     <main className="flex">
       <SideBar files={files} createFile={createFile} fileID={fileID} />
-      <Editor className="flex-1" />
+      {fileID && <Editor fileID={fileID} className="flex-1" />}
     </main>
   );
 };

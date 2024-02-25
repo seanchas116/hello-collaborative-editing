@@ -3,8 +3,10 @@ import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import StarterKit from "@tiptap/starter-kit";
-import React from "react";
+import Collaboration from "@tiptap/extension-collaboration";
+import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { EditorState } from "./EditorState";
 
 const content = `
 <h2>
@@ -38,8 +40,11 @@ display: none;
 `;
 
 export const Editor: React.FC<{
+  fileID: string;
   className?: string;
-}> = ({ className }) => {
+}> = ({ fileID, className }) => {
+  const editorState = useMemo(() => new EditorState(fileID), [fileID]);
+
   const editor = useEditor({
     extensions: [
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -54,15 +59,18 @@ export const Editor: React.FC<{
           keepMarks: true,
           keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
         },
+        history: false,
+      }),
+      Collaboration.configure({
+        document: editorState.ydoc,
       }),
     ],
-    content,
   });
 
   return (
     <div className={twMerge("p-16", className)}>
       <div className="max-w-4xl mx-auto prose">
-        <EditorContent editor={editor} className="max-w-4xl mx-auto prose" />;
+        <EditorContent editor={editor} className="max-w-4xl mx-auto prose" />
       </div>
     </div>
   );
