@@ -5,6 +5,7 @@ import TextStyle from "@tiptap/extension-text-style";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Collaboration from "@tiptap/extension-collaboration";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { EditorState } from "./EditorState";
@@ -80,6 +81,15 @@ export const Editor: React.FC<{
       }),
       Collaboration.configure({
         document: editorState.ydoc,
+      }),
+      CollaborationCursor.configure({
+        provider: {
+          awareness: editorState.awareness,
+        },
+        user: {
+          name: "Cyndi Lauper",
+          color: "#f783ac",
+        },
       }),
     ],
   });

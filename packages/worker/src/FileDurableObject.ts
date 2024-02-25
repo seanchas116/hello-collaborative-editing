@@ -70,7 +70,11 @@ export class FileDurableObject {
 
 			switch (message.type) {
 				case 'awareness':
-					// ...
+					for (const session of this.sessions) {
+						if (session !== ws) {
+							session.send(event.data);
+						}
+					}
 					break;
 				case 'update':
 					Y.applyUpdate(this.ydoc, message.data);

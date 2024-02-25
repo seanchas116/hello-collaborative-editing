@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.39.7",
     "@tailwindcss/typography": "^0.5.10",
     "@tiptap/extension-collaboration": "^2.2.4",
+    "@tiptap/extension-collaboration-cursor": "^2.2.4",
     "@tiptap/extension-color": "^2.2.4",
     "@tiptap/extension-list-item": "^2.2.4",
     "@tiptap/extension-placeholder": "^2.2.4",
@@ -35,6 +36,7 @@
     "styled-components": "^6.1.8",
     "tailwind-merge": "^2.2.1",
     "y-prosemirror": "^1.2.2",
+    "y-protocols": "^1.0.6",
     "yjs": "^13.6.12"
   },
   "devDependencies": {
