@@ -5,7 +5,7 @@ import { User } from "@supabase/supabase-js";
 import { db } from "@/db/db";
 import { File, files } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
-import { App } from "./App";
+import { Editor } from "./Editor";
 
 async function getFiles(user: User): Promise<File[]> {
   return await db
@@ -15,7 +15,7 @@ async function getFiles(user: User): Promise<File[]> {
     .orderBy(desc(files.createdAt));
 }
 
-export default async function DashboardPage({
+export default async function EditorPage({
   searchParams,
 }: {
   searchParams: {
@@ -32,6 +32,6 @@ export default async function DashboardPage({
   const files = await getFiles(data.user);
 
   return (
-    <App files={files} createFile={createFile} fileID={searchParams.file} />
+    <Editor files={files} createFile={createFile} fileID={searchParams.file} />
   );
 }

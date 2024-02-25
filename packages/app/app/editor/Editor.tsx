@@ -7,7 +7,7 @@ import { ReactTimeAgo } from "@/components/TimeAgo";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const App: React.FC<{
+export const Editor: React.FC<{
   files: File[];
   createFile(): Promise<void>;
   fileID?: string;
@@ -35,7 +35,7 @@ export const App: React.FC<{
                 aria-pressed={file.id === selectedFileID}
                 onClick={() => {
                   setSelectedFileID(file.id);
-                  router.replace(`/dashboard?file=${file.id}`);
+                  router.replace(`/editor?file=${file.id}`);
                 }}
               >
                 <h2 className="font-medium text-gray-900">{file.name}</h2>

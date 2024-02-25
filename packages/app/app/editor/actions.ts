@@ -22,8 +22,8 @@ export async function createFile() {
     })
     .returning();
 
-  revalidatePath("/dashboard");
-  redirect(`/dashboard?file=${file.id}`);
+  revalidatePath("/editor");
+  redirect(`/editor?file=${file.id}`);
 }
 
 export async function getFiles() {
