@@ -11,12 +11,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { createClient } from "@/utils/supabase/client";
 
 export const SideBar: React.FC<{
   files: File[];
   createFile(): Promise<void>;
   fileID?: string;
 }> = ({ files, createFile, fileID }) => {
+  const supabase = createClient();
+
   const router = useRouter();
 
   const [selectedFileID, setSelectedFileID] = useState<string | undefined>();
@@ -30,7 +33,7 @@ export const SideBar: React.FC<{
 
   return (
     <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm border-r border-gray-200">
-      <div className="m-2">
+      <div className="m-2 flex flex-col">
         <DropdownMenu>
           <DropdownMenuTrigger className="items-center flex gap-2 p-2">
             <img
@@ -39,13 +42,17 @@ export const SideBar: React.FC<{
             />
             <div className="text-gray-900 font-medium text-sm">Jane Doe</div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent align="start">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                await supabase.auth.signOut();
+                router.push("/login");
+              }}
+            >
+              Sign Out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <div className="p-2 flex items-center gap-2 text-gray-400 py-0">
