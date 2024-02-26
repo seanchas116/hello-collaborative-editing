@@ -50,7 +50,7 @@ export const SideBar: React.FC<{
             <DropdownMenuItem
               onClick={async () => {
                 await supabase.auth.signOut();
-                router.push("/login");
+                router.push("/");
               }}
             >
               Sign Out

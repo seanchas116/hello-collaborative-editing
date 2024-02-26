@@ -30,7 +30,7 @@ export default async function Home() {
         <div className="gap-4 flex">
           {data.user ? (
             <Link
-              href={data.user ? "/editor" : "/login"}
+              href="/editor"
               className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
             >
               Launch Editor
