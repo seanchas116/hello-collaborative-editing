@@ -1,6 +1,10 @@
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.getUser();
+
   return (
     <main className="w-screen h-screen flex items-center justify-center">
       <div className="flex-col items-center gap-16 flex">
@@ -24,10 +28,10 @@ export default function Home() {
         </div>
         <div className="gap-4 flex">
           <Link
-            href="/login"
+            href={data.user ? "/editor" : "/login"}
             className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
           >
-            Launch App
+            Launch Editor
           </Link>
           <a
             href="https://github.com/seanchas116/hello-collaborative-editing"
