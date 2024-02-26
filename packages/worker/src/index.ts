@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import jwt from 'jsonwebtoken';
 import { Bindings } from './Bindings';
+import jwt from '@tsndr/cloudflare-worker-jwt';
 export { FileDurableObject } from './FileDurableObject';
 
 const app = new Hono<{
@@ -26,14 +26,20 @@ app.get('/file', async (c) => {
 	const secret = c.env.CF_WORKER_JWT_SECRET;
 
 	try {
-		const decoded = jwt.verify(token, secret);
-		if (typeof decoded !== 'object') {
+		const isValid = await jwt.verify(token, secret);
+		if (!isValid) {
 			return c.text('invalid token', 403);
 		}
-		if (!decoded.exp || decoded.exp < Math.floor(Date.now() / 1000)) {
+
+		const { payload } = jwt.decode(token);
+		if (!payload) {
+			return c.text('invalid token', 403);
+		}
+
+		if (!payload.exp || payload.exp < Math.floor(Date.now() / 1000)) {
 			return c.text('token expired', 403);
 		}
-		if (decoded.file_id !== fileID) {
+		if (!('file_id' in payload) || payload.file_id !== fileID) {
 			return c.text('invalid token', 403);
 		}
 	} catch (e) {
