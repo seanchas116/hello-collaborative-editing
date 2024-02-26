@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
+import { SignInButton } from "./SignInButton";
 
 export default async function Home() {
   const supabase = createClient();
@@ -27,12 +28,16 @@ export default async function Home() {
           </div>
         </div>
         <div className="gap-4 flex">
-          <Link
-            href={data.user ? "/editor" : "/login"}
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
-          >
-            Launch Editor
-          </Link>
+          {data.user ? (
+            <Link
+              href={data.user ? "/editor" : "/login"}
+              className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
+            >
+              Launch Editor
+            </Link>
+          ) : (
+            <SignInButton className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold" />
+          )}
           <a
             href="https://github.com/seanchas116/hello-collaborative-editing"
             target="_blank"
