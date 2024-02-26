@@ -11,10 +11,11 @@ const app = new Hono<{
 app.get('/file', async (c) => {
 	console.log('get /file');
 
-	const fileID = c.req.queries('id');
-	if (fileID?.length !== 1) {
+	const fileIDs = c.req.queries('id');
+	if (fileIDs?.length !== 1) {
 		return c.text('id is required', 404);
 	}
+	const fileID = fileIDs[0];
 
 	const tokens = c.req.queries('token');
 	if (tokens?.length !== 1) {
@@ -32,16 +33,14 @@ app.get('/file', async (c) => {
 		if (!decoded.exp || decoded.exp < Math.floor(Date.now() / 1000)) {
 			return c.text('token expired', 403);
 		}
-		if (typeof decoded.sub !== 'string') {
+		if (decoded.file_id !== fileID) {
 			return c.text('invalid token', 403);
 		}
-
-		// TODO: check if the user has access to the file
 	} catch (e) {
 		return c.text('invalid token', 403);
 	}
 
-	const id = c.env.FILE_DURABLE_OBJECT.idFromName(fileID[0]);
+	const id = c.env.FILE_DURABLE_OBJECT.idFromName(fileID);
 	const obj = c.env.FILE_DURABLE_OBJECT.get(id);
 
 	return await obj.fetch(c.req.raw);

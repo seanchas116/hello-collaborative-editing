@@ -8,7 +8,7 @@ const messageTypes = {
 
 interface EditorStateOptions {
   fileID: string;
-  generateCollaborativeAuthToken: () => Promise<string>;
+  generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
 }
 
 export class EditorState {
@@ -22,12 +22,12 @@ export class EditorState {
   }
 
   readonly fileID: string;
-  readonly generateCollaborativeAuthToken: () => Promise<string>;
+  readonly generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
   readonly ydoc: Y.Doc;
   readonly awareness: awarenessProtocol.Awareness;
 
   private async openConnection() {
-    const token = await this.generateCollaborativeAuthToken();
+    const token = await this.generateCollaborativeAuthToken(this.fileID);
 
     // TODO: reconnect
     const ws = new WebSocket(

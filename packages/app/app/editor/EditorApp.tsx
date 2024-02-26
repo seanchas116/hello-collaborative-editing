@@ -13,7 +13,7 @@ export const EditorApp: React.FC<{
   fileID?: string;
   files: File[];
   createFile: () => Promise<void>;
-  generateCollaborativeAuthToken: () => Promise<string>;
+  generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
 }> = ({ fileID, files, createFile, generateCollaborativeAuthToken }) => {
   return (
     <main className="flex">

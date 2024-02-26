@@ -86,7 +86,7 @@ const StyledEditorContent = styled(EditorContent)`
 export const Editor: React.FC<{
   className?: string;
   fileID: string;
-  generateCollaborativeAuthToken: () => Promise<string>;
+  generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
 }> = ({ fileID, className, generateCollaborativeAuthToken }) => {
   const editorState = useMemo(
     () => new EditorState({ fileID, generateCollaborativeAuthToken }),
