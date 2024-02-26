@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
+import { useCurrentUser } from "./useCurrentUser";
 
 export const SideBar: React.FC<{
   files: File[];
@@ -19,6 +20,10 @@ export const SideBar: React.FC<{
   fileID?: string;
 }> = ({ files, createFile, fileID }) => {
   const supabase = createClient();
+  const currentUser = useCurrentUser();
+
+  const userName = currentUser?.user_metadata.name;
+  const userPicture = currentUser?.user_metadata.picture;
 
   const router = useRouter();
 
@@ -36,11 +41,8 @@ export const SideBar: React.FC<{
       <div className="m-2 flex flex-col">
         <DropdownMenu>
           <DropdownMenuTrigger className="items-center flex gap-2 p-2">
-            <img
-              className="w-8 h-8 rounded-2xl"
-              src="https://via.placeholder.com/32x32"
-            />
-            <div className="text-gray-900 font-medium text-sm">Jane Doe</div>
+            <img className="w-8 h-8 rounded-2xl" src={userPicture} />
+            <div className="text-gray-900 font-medium text-sm">{userName}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
