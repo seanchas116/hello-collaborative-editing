@@ -84,10 +84,14 @@ const StyledEditorContent = styled(EditorContent)`
 `;
 
 export const Editor: React.FC<{
-  fileID: string;
   className?: string;
-}> = ({ fileID, className }) => {
-  const editorState = useMemo(() => new EditorState(fileID), [fileID]);
+  fileID: string;
+  generateCollaborativeAuthToken: () => Promise<string>;
+}> = ({ fileID, className, generateCollaborativeAuthToken }) => {
+  const editorState = useMemo(
+    () => new EditorState({ fileID, generateCollaborativeAuthToken }),
+    [fileID, generateCollaborativeAuthToken]
+  );
 
   const editor = useEditor({
     extensions: [

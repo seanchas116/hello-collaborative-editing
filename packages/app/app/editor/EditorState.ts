@@ -6,16 +6,35 @@ const messageTypes = {
   awareness: 2,
 } as const;
 
+interface EditorStateOptions {
+  fileID: string;
+  generateCollaborativeAuthToken: () => Promise<string>;
+}
+
 export class EditorState {
-  constructor(fileID: string) {
+  constructor({ fileID, generateCollaborativeAuthToken }: EditorStateOptions) {
+    this.fileID = fileID;
+    this.generateCollaborativeAuthToken = generateCollaborativeAuthToken;
     this.ydoc = new Y.Doc();
     this.awareness = new awarenessProtocol.Awareness(this.ydoc);
 
+    void this.openConnection();
+  }
+
+  readonly fileID: string;
+  readonly generateCollaborativeAuthToken: () => Promise<string>;
+  readonly ydoc: Y.Doc;
+  readonly awareness: awarenessProtocol.Awareness;
+
+  private async openConnection() {
+    const token = await this.generateCollaborativeAuthToken();
+
+    // TODO: reconnect
     const ws = new WebSocket(
       `wss://${process.env.NEXT_PUBLIC_CF_WORKER_URL!.replace(
         "https://",
         ""
-      )}/file?id=${fileID}`
+      )}/file?id=${this.fileID}&token=${token}`
     );
     ws.binaryType = "arraybuffer";
 
@@ -75,7 +94,4 @@ export class EditorState {
       }
     });
   }
-
-  readonly ydoc: Y.Doc;
-  readonly awareness: awarenessProtocol.Awareness;
 }

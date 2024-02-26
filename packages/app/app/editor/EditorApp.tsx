@@ -10,14 +10,22 @@ const Editor = dynamic(() => import("./Editor").then((m) => m.Editor), {
 });
 
 export const EditorApp: React.FC<{
-  files: File[];
-  createFile(): Promise<void>;
   fileID?: string;
-}> = ({ files, createFile, fileID }) => {
+  files: File[];
+  createFile: () => Promise<void>;
+  generateCollaborativeAuthToken: () => Promise<string>;
+}> = ({ fileID, files, createFile, generateCollaborativeAuthToken }) => {
   return (
     <main className="flex">
       <SideBar files={files} createFile={createFile} fileID={fileID} />
-      {fileID && <Editor fileID={fileID} className="flex-1" key={fileID} />}
+      {fileID && (
+        <Editor
+          key={fileID}
+          className="flex-1"
+          fileID={fileID}
+          generateCollaborativeAuthToken={generateCollaborativeAuthToken}
+        />
+      )}
     </main>
   );
 };

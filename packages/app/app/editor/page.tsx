@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { createFile } from "./actions";
+import { createFile, generateCollaborativeAuthToken } from "./actions";
 import { User } from "@supabase/supabase-js";
 import { db } from "@/db/db";
 import { File, files } from "@/db/schema";
@@ -33,9 +33,10 @@ export default async function EditorPage({
 
   return (
     <EditorApp
+      fileID={searchParams.file}
       files={files}
       createFile={createFile}
-      fileID={searchParams.file}
+      generateCollaborativeAuthToken={generateCollaborativeAuthToken}
     />
   );
 }
