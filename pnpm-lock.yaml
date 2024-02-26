@@ -152,9 +152,6 @@ importers:
 
   packages/worker:
     dependencies:
-      '@tsndr/cloudflare-worker-jwt':
-        specifier: ^2.5.1
-        version: 2.5.1
       hono:
         specifier: ^4.0.6
         version: 4.0.6
@@ -2066,10 +2063,6 @@ packages:
       '@tiptap/extension-text': 2.2.4(@tiptap/core@2.2.4)
     transitivePeerDependencies:
       - '@tiptap/pm'
-    dev: false
-
-  /@tsndr/cloudflare-worker-jwt@2.5.1:
-    resolution: {integrity: sha512-MKB8jOdMcZZTeAovOBbAl2Z1PPmPiyceZUmCM0hlgHapQqOT1riQlvIFX6jOmfEpAhFGp0VaGAq995kr4mNMMg==}
     dev: false
 
   /@types/json5@0.0.29:
