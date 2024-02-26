@@ -25,25 +25,21 @@ app.get('/file', async (c) => {
 	const token = tokens[0];
 	const secret = c.env.CF_WORKER_JWT_SECRET;
 
-	try {
-		const isValid = await jwt.verify(token, secret);
-		if (!isValid) {
-			return c.text('invalid token', 403);
-		}
-
-		const { payload } = jwt.decode(token);
-		if (!payload) {
-			return c.text('invalid token', 403);
-		}
-
-		if (!payload.exp || payload.exp < Math.floor(Date.now() / 1000)) {
-			return c.text('token expired', 403);
-		}
-		if (!('file_id' in payload) || payload.file_id !== fileID) {
-			return c.text('invalid token', 403);
-		}
-	} catch (e) {
+	const isValid = await jwt.verify(token, secret);
+	if (!isValid) {
 		return c.text('invalid token', 403);
+	}
+
+	const { payload } = jwt.decode(token);
+	if (!payload) {
+		return c.text('no payload', 403);
+	}
+
+	if (!payload.exp || payload.exp < Math.floor(Date.now() / 1000)) {
+		return c.text('token expired', 403);
+	}
+	if (!('file_id' in payload) || payload.file_id !== fileID) {
+		return c.text('file id mismatch', 403);
 	}
 
 	const id = c.env.FILE_DURABLE_OBJECT.idFromName(fileID);
