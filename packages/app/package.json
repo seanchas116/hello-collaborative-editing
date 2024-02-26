@@ -32,6 +32,7 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.29.4",
     "javascript-time-ago": "^2.5.9",
+    "jsonwebtoken": "^9.0.2",
     "next": "14.1.0",
     "postgres": "^3.4.3",
     "react": "^18",
@@ -45,6 +46,7 @@
     "yjs": "^13.6.12"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
