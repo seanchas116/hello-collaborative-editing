@@ -28,12 +28,22 @@ export async function updateStripeSubscription(
     throw new Error("Customer not found");
   }
 
-  await db.insert(stripeSubscriptions).values({
-    userId: customer.userId,
+  const values = {
     id: subscription.id,
     status: subscription.status,
     priceId: subscription.items.data[0].price.id,
     metadata: subscription.metadata,
     data: subscription,
-  });
+  };
+
+  await db
+    .insert(stripeSubscriptions)
+    .values({
+      userId: customer.userId,
+      ...values,
+    })
+    .onConflictDoUpdate({
+      target: stripeCustomers.userId,
+      set: values,
+    });
 }
