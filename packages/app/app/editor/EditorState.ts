@@ -46,39 +46,37 @@ export class EditorState {
     });
     ws.binaryType = "arraybuffer";
 
-    ws.addEventListener("open", () => {
-      console.log("connected");
+    this.ydoc.on("update", (update: Uint8Array) => {
+      const array = new Uint8Array(update.length + 1);
+      array[0] = messageTypes.update;
+      array.set(update, 1);
+      // messages are accumulated and sent on open
+      ws.send(array);
+    });
 
-      this.awareness.on(
-        "update",
-        ({
-          added,
-          updated,
-          removed,
-        }: {
-          added: number[];
-          updated: number[];
-          removed: number[];
-        }) => {
-          const changedClients = added.concat(updated).concat(removed);
-          const update = awarenessProtocol.encodeAwarenessUpdate(
-            this.awareness,
-            changedClients
-          );
-          const array = new Uint8Array(update.length + 1);
-          array[0] = messageTypes.awareness;
-          array.set(update, 1);
-          ws.send(array);
-        }
-      );
-
-      this.ydoc.on("update", (update: Uint8Array) => {
+    this.awareness.on(
+      "update",
+      ({
+        added,
+        updated,
+        removed,
+      }: {
+        added: number[];
+        updated: number[];
+        removed: number[];
+      }) => {
+        const changedClients = added.concat(updated).concat(removed);
+        const update = awarenessProtocol.encodeAwarenessUpdate(
+          this.awareness,
+          changedClients
+        );
         const array = new Uint8Array(update.length + 1);
-        array[0] = messageTypes.update;
+        array[0] = messageTypes.awareness;
         array.set(update, 1);
         ws.send(array);
-      });
-    });
+      }
+    );
+
     ws.addEventListener("message", (event) => {
       console.log("message", event.data);
 
