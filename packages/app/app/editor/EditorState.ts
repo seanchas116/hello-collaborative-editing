@@ -1,6 +1,7 @@
 import * as Y from "yjs";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { User } from "@supabase/supabase-js";
+import ReconnectingWebSocket from "reconnecting-websocket";
 
 const messageTypes = {
   update: 1,
@@ -35,15 +36,14 @@ export class EditorState {
   readonly awareness: awarenessProtocol.Awareness;
 
   private async openConnection() {
-    const token = await this.generateCollaborativeAuthToken(this.fileID);
+    const ws = new ReconnectingWebSocket(async () => {
+      const token = await this.generateCollaborativeAuthToken(this.fileID);
 
-    // TODO: reconnect
-    const ws = new WebSocket(
-      `wss://${process.env.NEXT_PUBLIC_CF_WORKER_URL!.replace(
+      return `wss://${process.env.NEXT_PUBLIC_CF_WORKER_URL!.replace(
         "https://",
         ""
-      )}/file?id=${this.fileID}&token=${token}`
-    );
+      )}/file?id=${this.fileID}&token=${token}`;
+    });
     ws.binaryType = "arraybuffer";
 
     ws.addEventListener("open", () => {
