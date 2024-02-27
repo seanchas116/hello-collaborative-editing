@@ -23,7 +23,7 @@ app.get('/file', async (c) => {
 	}
 
 	const token = tokens[0];
-	const secret = c.env.CF_WORKER_JWT_SECRET;
+	const secret = c.env.COLLABORATIVE_EDITING_JWT_SECRET;
 
 	console.log(token.length, secret.length);
 

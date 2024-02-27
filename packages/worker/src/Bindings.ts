@@ -14,5 +14,5 @@ export type Bindings = {
 	// Example binding to a Queue. Learn more at https://developers.cloudflare.com/queues/javascript-apis/
 	// MY_QUEUE: Queue;
 
-	CF_WORKER_JWT_SECRET: string;
+	COLLABORATIVE_EDITING_JWT_SECRET: string;
 };

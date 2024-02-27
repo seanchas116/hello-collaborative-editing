@@ -36,7 +36,7 @@ export async function generateCollaborativeAuthToken(fileID: string) {
     throw new Error("User not found");
   }
 
-  const secret = process.env.CF_WORKER_JWT_SECRET;
+  const secret = process.env.COLLABORATIVE_EDITING_JWT_SECRET;
   if (!secret) {
     throw new Error("No secret found");
   }
