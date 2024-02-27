@@ -1,7 +1,5 @@
 import {
-  boolean,
-  integer,
-  jsonb,
+  customType,
   pgEnum,
   pgTable,
   text,
@@ -11,6 +9,18 @@ import {
 } from "drizzle-orm/pg-core";
 import { authUsers } from "./supabase-schema";
 import { InferSelectModel } from "drizzle-orm";
+
+// https://github.com/drizzle-team/drizzle-orm/issues/1511#issuecomment-1824687669
+const customJsonb = <TData>(name: string) =>
+  customType<{ data: TData; driverData: string }>({
+    dataType() {
+      return "jsonb";
+    },
+    // @ts-ignore
+    toDriver(value: TData) {
+      return value;
+    },
+  })(name);
 
 export const files = pgTable("files", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -57,8 +67,8 @@ export const stripeSubscriptions = pgTable("stripe_subscriptions", {
     .notNull(),
   status: stripeSubscriptionStatus("status").notNull(),
   priceId: text("priceId").notNull(),
-  metadata: jsonb("metadata").notNull(),
-  data: jsonb("data").notNull(),
+  metadata: customJsonb("metadata").notNull(),
+  data: customJsonb("data").notNull(),
 });
 
 export type File = InferSelectModel<typeof files>;

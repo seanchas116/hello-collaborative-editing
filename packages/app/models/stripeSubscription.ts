@@ -6,12 +6,13 @@ import {
   stripeSubscriptions,
 } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { stripe } from "@/utils/stripe/config";
 
 export type { StripeSubscription };
 
-export async function updateStripeSubscription(
-  subscription: Stripe.Subscription
-) {
+export async function updateStripeSubscription(subscriptionId: string) {
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
   const customerId =
     typeof subscription.customer === "object"
       ? subscription.customer.id

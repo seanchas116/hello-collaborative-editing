@@ -24,7 +24,15 @@ export async function POST(req: Request) {
       case "customer.subscription.updated":
       case "customer.subscription.deleted":
         console.log(event.data.object);
-        await updateStripeSubscription(event.data.object);
+        await updateStripeSubscription(event.data.object.id);
+        break;
+      case "checkout.session.completed":
+        console.log(event.data.object);
+        const checkoutSession = event.data.object as Stripe.Checkout.Session;
+        if (checkoutSession.mode === "subscription") {
+          const subscriptionId = checkoutSession.subscription as string;
+          await updateStripeSubscription(subscriptionId);
+        }
         break;
       default:
         return new Response(`Unsupported event type: ${event.type}`, {

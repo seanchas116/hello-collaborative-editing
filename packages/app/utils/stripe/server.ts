@@ -73,6 +73,7 @@ export async function checkoutWithStripe(): Promise<string> {
       line_items: [
         {
           price: process.env.STRIPE_PRICE_ID,
+          quantity: 1,
         },
       ],
       cancel_url: process.env.NEXT_PUBLIC_SITE_URL,
