@@ -89,12 +89,11 @@ export async function checkoutWithStripe(): Promise<CheckoutResponse> {
       throw new Error("Unable to create checkout session.");
     }
 
-    // Instead of returning a Response, just return the data or error.
-    if (session) {
-      return { sessionId: session.id };
-    } else {
-      throw new Error("Unable to create checkout session.");
+    if (!session.url) {
+      throw new Error("Could not create checkout session.");
     }
+
+    redirect(session.url);
   } catch (error) {
     console.error(error);
     redirect("/error");

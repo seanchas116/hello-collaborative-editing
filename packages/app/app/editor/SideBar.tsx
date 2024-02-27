@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { checkoutWithStripe } from "@/utils/stripe/server";
 
 export const SideBar: React.FC<{
   user: User;
@@ -36,6 +37,10 @@ export const SideBar: React.FC<{
     }
   }, [fileID]);
 
+  const onCheckout = () => {
+    checkoutWithStripe();
+  };
+
   return (
     <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm border-r border-gray-200">
       <div className="m-2 flex flex-col">
@@ -47,6 +52,9 @@ export const SideBar: React.FC<{
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={onCheckout}>
+              Subscribe Pro...
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={async () => {
                 await supabase.auth.signOut();
