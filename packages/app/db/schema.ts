@@ -64,3 +64,5 @@ export const stripeSubscriptions = pgTable("stripe_subscriptions", {
 export type File = InferSelectModel<typeof files>;
 export type Permission = InferSelectModel<typeof permissions>;
 export type PermissionType = (typeof permissionTypeEnum.enumValues)[number];
+export type StripeCustomer = InferSelectModel<typeof stripeCustomers>;
+export type StripeSubscription = InferSelectModel<typeof stripeSubscriptions>;
