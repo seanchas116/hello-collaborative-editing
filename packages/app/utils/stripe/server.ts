@@ -9,11 +9,6 @@ import { stripeCustomers } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { User } from "@supabase/supabase-js";
 
-type CheckoutResponse = {
-  errorRedirect?: string;
-  sessionId?: string;
-};
-
 async function createOrRetrieveCustomer(user: User) {
   const stripeCustomer = (
     await db
@@ -39,7 +34,7 @@ async function createOrRetrieveCustomer(user: User) {
   return newCustomer.id;
 }
 
-export async function checkoutWithStripe(): Promise<CheckoutResponse> {
+export async function checkoutWithStripe(): Promise<string> {
   try {
     // Get the user from Supabase auth
     const supabase = createClient();
@@ -73,7 +68,6 @@ export async function checkoutWithStripe(): Promise<CheckoutResponse> {
       line_items: [
         {
           price: process.env.STRIPE_PRICE_ID,
-          quantity: 1,
         },
       ],
       cancel_url: process.env.NEXT_PUBLIC_SITE_URL,
@@ -93,7 +87,9 @@ export async function checkoutWithStripe(): Promise<CheckoutResponse> {
       throw new Error("Could not create checkout session.");
     }
 
-    redirect(session.url);
+    console.log("Checkout session created:", session);
+
+    return session.url;
   } catch (error) {
     console.error(error);
     redirect("/error");

@@ -37,8 +37,9 @@ export const SideBar: React.FC<{
     }
   }, [fileID]);
 
-  const onCheckout = () => {
-    checkoutWithStripe();
+  const onCheckout = async () => {
+    const url = await checkoutWithStripe();
+    window.open(url, "_blank");
   };
 
   return (
