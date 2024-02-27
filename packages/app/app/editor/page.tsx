@@ -33,6 +33,7 @@ export default async function EditorPage({
 
   return (
     <EditorApp
+      user={data.user}
       fileID={searchParams.file}
       files={files}
       createFile={createFile}

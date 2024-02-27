@@ -11,6 +11,7 @@ import { twMerge } from "tailwind-merge";
 import { EditorState } from "./EditorState";
 import styled from "styled-components";
 import twColors from "tailwindcss/colors";
+import { User } from "@supabase/supabase-js";
 
 const userColors = [
   twColors.blue[500],
@@ -85,12 +86,13 @@ const StyledEditorContent = styled(EditorContent)`
 
 export const Editor: React.FC<{
   className?: string;
+  user: User;
   fileID: string;
   generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
-}> = ({ fileID, className, generateCollaborativeAuthToken }) => {
+}> = ({ className, user, fileID, generateCollaborativeAuthToken }) => {
   const editorState = useMemo(
-    () => new EditorState({ fileID, generateCollaborativeAuthToken }),
-    [fileID, generateCollaborativeAuthToken]
+    () => new EditorState({ user, fileID, generateCollaborativeAuthToken }),
+    [user, fileID, generateCollaborativeAuthToken]
   );
 
   const editor = useEditor({
@@ -121,7 +123,7 @@ export const Editor: React.FC<{
           }
         })(),
         user: {
-          name: "Cyndi Lauper",
+          name: user.user_metadata.name,
           color: userColors[editorState.ydoc.clientID % userColors.length],
         },
       }),

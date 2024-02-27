@@ -1,5 +1,6 @@
 import * as Y from "yjs";
 import * as awarenessProtocol from "y-protocols/awareness.js";
+import { User } from "@supabase/supabase-js";
 
 const messageTypes = {
   update: 1,
@@ -7,12 +8,18 @@ const messageTypes = {
 } as const;
 
 interface EditorStateOptions {
+  user: User;
   fileID: string;
   generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
 }
 
 export class EditorState {
-  constructor({ fileID, generateCollaborativeAuthToken }: EditorStateOptions) {
+  constructor({
+    user,
+    fileID,
+    generateCollaborativeAuthToken,
+  }: EditorStateOptions) {
+    this.user = user;
     this.fileID = fileID;
     this.generateCollaborativeAuthToken = generateCollaborativeAuthToken;
     this.ydoc = new Y.Doc();
@@ -21,6 +28,7 @@ export class EditorState {
     void this.openConnection();
   }
 
+  readonly user: User;
   readonly fileID: string;
   readonly generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
   readonly ydoc: Y.Doc;

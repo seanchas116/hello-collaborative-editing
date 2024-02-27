@@ -12,18 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
-import { useCurrentUser } from "./useCurrentUser";
+import { User } from "@supabase/supabase-js";
 
 export const SideBar: React.FC<{
+  user: User;
   files: File[];
   createFile(): Promise<void>;
   fileID?: string;
-}> = ({ files, createFile, fileID }) => {
+}> = ({ user, files, createFile, fileID }) => {
   const supabase = createClient();
-  const currentUser = useCurrentUser();
 
-  const userName = currentUser?.user_metadata.name;
-  const userPicture = currentUser?.user_metadata.picture;
+  const userName = user?.user_metadata.name;
+  const userPicture = user?.user_metadata.picture;
 
   const router = useRouter();
 
