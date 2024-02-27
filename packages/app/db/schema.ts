@@ -36,7 +36,7 @@ export const stripeCustomers = pgTable("stripe_customers", {
   userId: uuid("id")
     .primaryKey()
     .references(() => authUsers.id),
-  customerId: text("customerId"),
+  customerId: text("customerId").notNull(),
 });
 
 export const stripeSubscriptionStatus = pgEnum("stripe_subscription_status", [
@@ -52,11 +52,13 @@ export const stripeSubscriptionStatus = pgEnum("stripe_subscription_status", [
 
 export const stripeSubscriptions = pgTable("stripe_subscriptions", {
   id: text("id").primaryKey(),
-  userId: uuid("userId").references(() => authUsers.id),
-  status: stripeSubscriptionStatus("status"),
-  priceId: text("priceId"),
-  metadata: jsonb("metadata"),
-  data: jsonb("data"),
+  userId: uuid("userId")
+    .references(() => authUsers.id)
+    .notNull(),
+  status: stripeSubscriptionStatus("status").notNull(),
+  priceId: text("priceId").notNull(),
+  metadata: jsonb("metadata").notNull(),
+  data: jsonb("data").notNull(),
 });
 
 export type File = InferSelectModel<typeof files>;
