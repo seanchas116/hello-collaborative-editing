@@ -31,6 +31,11 @@ async function createOrRetrieveCustomer(user: User) {
   const newCustomer = await stripe.customers.create(customerData);
   if (!newCustomer) throw new Error("Stripe customer creation failed.");
 
+  await db.insert(stripeCustomers).values({
+    userId: user.id,
+    customerId: newCustomer.id,
+  });
+
   return newCustomer.id;
 }
 
