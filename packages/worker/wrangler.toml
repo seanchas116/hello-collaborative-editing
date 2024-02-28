@@ -1,4 +1,4 @@
-name = "worker"
+name = "hello-collaborative-editing"
 main = "src/index.ts"
 compatibility_date = "2024-02-23"
 
