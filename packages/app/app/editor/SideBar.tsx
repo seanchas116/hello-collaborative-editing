@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { checkoutWithStripe, createStripePortal } from "@/actions/stripe";
+import { checkoutWithStripe, createStripePortal } from "@/actions/payment";
 import { Button } from "@/components/ui/button";
 import { createFile } from "@/actions/file";
 import { useToast } from "@/components/ui/use-toast";
