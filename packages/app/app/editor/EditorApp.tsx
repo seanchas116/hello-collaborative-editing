@@ -13,14 +13,16 @@ const Editor = dynamic(() => import("./Editor").then((m) => m.Editor), {
 export const EditorApp: React.FC<{
   user: User;
   isPremium: boolean;
+  seatCount: number;
   fileID?: string;
   files: File[];
-}> = ({ user, isPremium, fileID, files }) => {
+}> = ({ user, isPremium, seatCount, fileID, files }) => {
   return (
     <main className="flex">
       <SideBar
         user={user}
         isPremium={isPremium}
+        seatCount={seatCount}
         files={files}
         fileID={fileID}
       />

@@ -2,9 +2,10 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { User } from "@supabase/supabase-js";
 import { db } from "@/db/db";
-import { File, files, stripeSubscriptions } from "@/db/schema";
-import { and, desc, eq } from "drizzle-orm";
+import { File, files } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 import { EditorApp } from "./EditorApp";
+import { getSubscriptionForUser } from "@/usecases/stripe-subscriptions/get";
 
 async function getFiles(user: User): Promise<File[]> {
   return await db
@@ -12,20 +13,6 @@ async function getFiles(user: User): Promise<File[]> {
     .from(files)
     .where(eq(files.ownerId, user.id))
     .orderBy(desc(files.createdAt));
-}
-
-async function isPremiumUser(user: User): Promise<boolean> {
-  const subscriptions = await db
-    .select()
-    .from(stripeSubscriptions)
-    .where(
-      and(
-        eq(stripeSubscriptions.userId, user.id),
-        eq(stripeSubscriptions.status, "active")
-      )
-    );
-
-  return subscriptions.length > 0;
 }
 
 export default async function EditorPage({
@@ -43,13 +30,14 @@ export default async function EditorPage({
   }
 
   const files = await getFiles(data.user);
-  const isPremium = await isPremiumUser(data.user);
+  const subscription = await getSubscriptionForUser(data.user.id);
 
   return (
     <EditorApp
       user={data.user}
       fileID={searchParams.file}
-      isPremium={isPremium}
+      isPremium={subscription?.status === "active"}
+      seatCount={subscription?.quantity || 0}
       files={files}
     />
   );

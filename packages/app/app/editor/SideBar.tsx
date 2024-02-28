@@ -14,6 +14,7 @@ import {
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import {
+  changeQuantity,
   checkoutWithStripe as createStripeCheckoutURL,
   createStripePortal as createStripePortalURL,
 } from "@/actions/payment";
@@ -26,7 +27,8 @@ export const SideBar: React.FC<{
   isPremium: boolean;
   files: File[];
   fileID?: string;
-}> = ({ user, isPremium, files, fileID }) => {
+  seatCount: number;
+}> = ({ user, isPremium, files, fileID, seatCount }) => {
   const { toast } = useToast();
 
   const supabase = createClient();
@@ -83,11 +85,23 @@ export const SideBar: React.FC<{
                 <div className="flex items-center justify-between px-2 py-1.5 text-sm">
                   <span>Seat</span>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="icon">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        changeQuantity(Math.max(0, seatCount - 1));
+                      }}
+                    >
                       <Icon icon="material-symbols:remove" />
                     </Button>
-                    <span>1</span>
-                    <Button variant="outline" size="icon">
+                    <span>{seatCount}</span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        changeQuantity(seatCount + 1);
+                      }}
+                    >
                       <Icon icon="material-symbols:add" />
                     </Button>
                   </div>

@@ -4,7 +4,7 @@ import { and, eq } from "drizzle-orm";
 
 export async function getSubscriptionForUser(
   userId: string
-): Promise<StripeSubscription> {
+): Promise<StripeSubscription | undefined> {
   const subscriptions = await db
     .select()
     .from(stripeSubscriptions)
@@ -16,7 +16,7 @@ export async function getSubscriptionForUser(
     );
 
   if (subscriptions.length === 0) {
-    throw new Error("No active subscription found");
+    return undefined;
   }
 
   return subscriptions[0];

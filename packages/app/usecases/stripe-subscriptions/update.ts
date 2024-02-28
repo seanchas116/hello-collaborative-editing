@@ -55,13 +55,26 @@ export async function changeSubscriptionQuantity(
   userId: string,
   quantity: number
 ) {
-  const subscriptionId = (await getSubscriptionForUser(userId)).id;
+  const subscriptionId = (await getSubscriptionForUser(userId))?.id;
+
+  if (!subscriptionId) {
+    throw new Error("Subscription not found");
+  }
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+  const subscriptionItemId = subscription.items.data.find(
+    (item) => item.price.id === process.env.STRIPE_PRICE_ID
+  )?.id;
+  if (!subscriptionItemId) {
+    throw new Error("Subscription item not found");
+  }
+
   await stripe.subscriptions.update(subscriptionId, {
-    items: [
-      {
-        id: process.env.STRIPE_PRICE_ID,
-        quantity,
-      },
-    ],
+    items: [{ id: subscriptionItemId, quantity }],
   });
+
+  await db
+    .update(stripeSubscriptions)
+    .set({ quantity })
+    .where(eq(stripeSubscriptions.userId, userId));
 }

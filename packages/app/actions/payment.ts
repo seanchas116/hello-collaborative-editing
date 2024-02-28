@@ -5,6 +5,7 @@ import { stripe } from "@/utils/stripe/config";
 import { createClient } from "@/utils/supabase/server";
 import { getOrCreateStripeCustomer } from "@/usecases/stripe-customers/get-or-create";
 import { changeSubscriptionQuantity } from "@/usecases/stripe-subscriptions/update";
+import { revalidatePath } from "next/cache";
 
 export async function changeQuantity(quantity: number): Promise<void> {
   try {
@@ -21,6 +22,8 @@ export async function changeQuantity(quantity: number): Promise<void> {
     }
 
     await changeSubscriptionQuantity(user.id, quantity);
+
+    revalidatePath("/editor", "layout");
   } catch (error) {
     console.error(error);
     throw new Error("Could not change quantity.");
