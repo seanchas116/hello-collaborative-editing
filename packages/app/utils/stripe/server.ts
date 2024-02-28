@@ -4,40 +4,7 @@ import Stripe from "stripe";
 import { stripe } from "@/utils/stripe/config";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { db } from "@/db/db";
-import { stripeCustomers } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { User } from "@supabase/supabase-js";
-
-async function createOrRetrieveCustomer(user: User) {
-  const stripeCustomer = (
-    await db
-      .select()
-      .from(stripeCustomers)
-      .where(eq(stripeCustomers.userId, user.id))
-  ).at(0);
-  if (stripeCustomer) {
-    return stripeCustomer.customerId;
-  }
-
-  if (!user.email) {
-    throw new Error("User email not found");
-  }
-
-  const customerData = {
-    metadata: { supabaseUUID: user.id },
-    email: user.email,
-  };
-  const newCustomer = await stripe.customers.create(customerData);
-  if (!newCustomer) throw new Error("Stripe customer creation failed.");
-
-  await db.insert(stripeCustomers).values({
-    userId: user.id,
-    customerId: newCustomer.id,
-  });
-
-  return newCustomer.id;
-}
+import { getOrCreateStripeCustomer } from "@/usecases/stripe-customers/get-or-create";
 
 export async function checkoutWithStripe(): Promise<string> {
   try {
@@ -56,7 +23,7 @@ export async function checkoutWithStripe(): Promise<string> {
     // Retrieve or create the customer in Stripe
     let customer: string;
     try {
-      customer = await createOrRetrieveCustomer(user);
+      customer = (await getOrCreateStripeCustomer(user)).customerId;
     } catch (err) {
       console.error(err);
       throw new Error("Unable to access customer record.");
@@ -119,7 +86,7 @@ export async function createStripePortal() {
 
     let customer;
     try {
-      customer = await createOrRetrieveCustomer(user);
+      customer = (await getOrCreateStripeCustomer(user)).customerId;
     } catch (err) {
       console.error(err);
       throw new Error("Unable to access customer record.");

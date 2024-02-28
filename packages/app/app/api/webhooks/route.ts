@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { stripe } from "@/utils/stripe/config";
-import { updateStripeSubscription } from "@/models/stripeSubscription";
+import { updateStripeSubscription } from "@/usecases/stripe-subscriptions/update";
 
 export async function POST(req: Request) {
   const body = await req.text();
