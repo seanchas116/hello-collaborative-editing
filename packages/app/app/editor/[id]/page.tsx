@@ -26,5 +26,5 @@ export default async function EditorPage({
     redirect("/editor");
   }
 
-  return <EditorWrap user={data.user} fileID={id} />;
+  return <EditorWrap user={data.user} fileInfo={file} />;
 }

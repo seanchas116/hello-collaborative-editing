@@ -14,6 +14,7 @@ import twColors from "tailwindcss/colors";
 import { User } from "@supabase/supabase-js";
 import { observer } from "mobx-react-lite";
 import { Icon } from "@iconify/react";
+import { File } from "@/db/schema";
 
 const userColors = [
   twColors.blue[500],
@@ -58,19 +59,25 @@ const StyledEditorContent = styled(EditorContent)`
 export const Editor: React.FC<{
   className?: string;
   user: User;
-  fileID: string;
-}> = ({ className, user, fileID }) => {
+  fileInfo: File;
+}> = ({ className, user, fileInfo }) => {
   const [editorState, setEditorState] = React.useState<EditorState | null>(
     null
   );
 
   useEffect(() => {
-    const state = new EditorState({ user, fileID });
+    const state = new EditorState({ user, fileInfo });
     setEditorState(state);
     return () => {
       state.dispose();
     };
-  }, []);
+  }, [fileInfo.id]);
+
+  useEffect(() => {
+    if (editorState) {
+      editorState.fileInfo = fileInfo;
+    }
+  }, [editorState, fileInfo]);
 
   if (!editorState) {
     return null;

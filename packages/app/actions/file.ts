@@ -28,26 +28,6 @@ export async function createFile() {
   redirect(`/editor?file=${file.id}`);
 }
 
-export async function getFile(id: string) {
-  const supabase = createClient();
-
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    throw new Error("User not found");
-  }
-
-  const [file] = await db
-    .select()
-    .from(files)
-    .where(and(eq(files.ownerId, data.user.id), eq(files.id, id)));
-
-  if (!file) {
-    throw new Error("File not found");
-  }
-
-  return file;
-}
-
 export async function updateFile(
   id: string,
   values: { name: string }
@@ -65,7 +45,7 @@ export async function updateFile(
     .where(and(eq(files.ownerId, data.user.id), eq(files.id, id)))
     .returning();
 
-  revalidatePath("/editor");
+  revalidatePath("/editor", "layout");
 
   return results[0];
 }

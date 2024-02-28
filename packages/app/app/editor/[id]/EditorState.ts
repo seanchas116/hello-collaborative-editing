@@ -2,11 +2,7 @@ import * as Y from "yjs";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { User } from "@supabase/supabase-js";
 import ReconnectingWebSocket from "reconnecting-websocket";
-import {
-  generateCollaborativeAuthToken,
-  getFile,
-  updateFile,
-} from "@/actions/file";
+import { generateCollaborativeAuthToken, updateFile } from "@/actions/file";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { File } from "@/db/schema";
 
@@ -17,24 +13,19 @@ const messageTypes = {
 
 interface EditorStateOptions {
   user: User;
-  fileID: string;
+  fileInfo: File;
 }
 
 export class EditorState {
-  constructor({ user, fileID }: EditorStateOptions) {
+  constructor({ user, fileInfo }: EditorStateOptions) {
     this.user = user;
-    this.fileID = fileID;
+    this.fileInfo = fileInfo;
+    this.fileID = fileInfo.id;
+    this.fileName = fileInfo.name ?? "";
     this.ydoc = new Y.Doc();
     this.awareness = new awarenessProtocol.Awareness(this.ydoc);
     makeObservable(this);
     void this.openConnection();
-
-    getFile(fileID).then(
-      action((file) => {
-        this.fileInfo = file;
-        this.fileName = file.name ?? "";
-      })
-    );
   }
 
   readonly user: User;
@@ -44,16 +35,12 @@ export class EditorState {
   readonly disposers: (() => void)[] = [];
 
   @observable isLoaded = false;
-  @observable.ref fileInfo: File | undefined = undefined;
-
+  @observable.ref fileInfo: File;
   @observable fileName = "";
 
   @action async updateFileName(name: string) {
     this.fileName = name;
-    const result = await updateFile(this.fileID, { name });
-    runInAction(() => {
-      this.fileInfo = result;
-    });
+    await updateFile(this.fileID, { name });
   }
 
   private async openConnection() {
