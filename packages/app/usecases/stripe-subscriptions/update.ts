@@ -1,6 +1,7 @@
 import { db } from "@/db/db";
 import {
   StripeSubscription,
+  StripeSubscriptionInsert,
   stripeCustomers,
   stripeSubscriptions,
 } from "@/db/schema";
@@ -29,10 +30,11 @@ export async function updateSubscription(subscriptionId: string) {
     throw new Error("Customer not found");
   }
 
-  const values = {
+  const values: Omit<StripeSubscriptionInsert, "userId"> = {
     id: subscription.id,
     status: subscription.status,
     priceId: subscription.items.data[0].price.id,
+    quantity: subscription.items.data[0].quantity,
     metadata: subscription.metadata,
     data: subscription,
   };

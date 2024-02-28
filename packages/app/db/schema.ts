@@ -9,7 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "./supabase-schema";
-import { InferSelectModel } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 // https://github.com/drizzle-team/drizzle-orm/issues/1511#issuecomment-1824687669
 const customJsonb = <TData>(name: string) =>
@@ -78,3 +78,6 @@ export type Permission = InferSelectModel<typeof permissions>;
 export type PermissionType = (typeof permissionTypeEnum.enumValues)[number];
 export type StripeCustomer = InferSelectModel<typeof stripeCustomers>;
 export type StripeSubscription = InferSelectModel<typeof stripeSubscriptions>;
+export type StripeSubscriptionInsert = InferInsertModel<
+  typeof stripeSubscriptions
+>;
