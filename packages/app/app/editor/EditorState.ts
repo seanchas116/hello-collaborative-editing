@@ -28,6 +28,7 @@ export class EditorState {
   readonly fileID: string;
   readonly ydoc: Y.Doc;
   readonly awareness: awarenessProtocol.Awareness;
+  readonly disposers: (() => void)[] = [];
 
   private async openConnection() {
     const ws = new ReconnectingWebSocket(async () => {
@@ -93,5 +94,15 @@ export class EditorState {
           break;
       }
     });
+
+    this.disposers.push(() => {
+      ws.close();
+    });
+  }
+
+  dispose() {
+    for (const disposer of this.disposers) {
+      disposer();
+    }
   }
 }

@@ -6,7 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { EditorState } from "./EditorState";
 import styled from "styled-components";
@@ -89,11 +89,29 @@ export const Editor: React.FC<{
   user: User;
   fileID: string;
 }> = ({ className, user, fileID }) => {
-  const editorState = useMemo(
-    () => new EditorState({ user, fileID }),
-    [user, fileID]
+  const [editorState, setEditorState] = React.useState<EditorState | null>(
+    null
   );
 
+  useEffect(() => {
+    const state = new EditorState({ user, fileID });
+    setEditorState(state);
+    return () => {
+      state.dispose();
+    };
+  }, []);
+
+  if (!editorState) {
+    return null;
+  }
+
+  return <EditorImpl className={className} editorState={editorState} />;
+};
+
+const EditorImpl: React.FC<{
+  className?: string;
+  editorState: EditorState;
+}> = ({ className, editorState }) => {
   const editor = useEditor({
     extensions: [
       Placeholder.configure(),
@@ -122,7 +140,7 @@ export const Editor: React.FC<{
           }
         })(),
         user: {
-          name: user.user_metadata.name,
+          name: editorState.user.user_metadata.name,
           color: userColors[editorState.ydoc.clientID % userColors.length],
         },
       }),
