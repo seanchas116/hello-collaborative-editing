@@ -1,8 +1,10 @@
+"use client";
+
 import type { File } from "@/db/schema";
 import { Icon } from "@/components/Icon";
 import { ReactTimeAgo } from "@/components/TimeAgo";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +32,8 @@ export const SideBar: React.FC<{
   fileID?: string;
   seatCount: number;
 }> = ({ user, isPremium, files, fileID, seatCount }) => {
+  const pathname = usePathname();
+
   const { toast } = useToast();
 
   const supabase = createClient();
@@ -188,10 +192,10 @@ export const SideBar: React.FC<{
               key={file.id}
               data-file-id={file.id}
               className="flex flex-col items-start text-left gap-1 p-3 relative aria-pressed:bg-gray-200 rounded-xl"
-              aria-pressed={file.id === selectedFileID}
+              aria-pressed={pathname === `/editor/${file.id}`}
               onClick={() => {
                 setSelectedFileID(file.id);
-                router.replace(`/editor?file=${file.id}`);
+                router.replace(`/editor/${file.id}`);
               }}
             >
               <h2 className="font-medium text-gray-900">{file.name}</h2>
