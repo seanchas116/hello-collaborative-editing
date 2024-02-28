@@ -71,6 +71,7 @@ export const Editor: React.FC<{
     return () => {
       state.dispose();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileInfo.id]);
 
   useEffect(() => {
