@@ -76,5 +76,5 @@ export async function changeSubscriptionQuantity(
   await db
     .update(stripeSubscriptions)
     .set({ quantity })
-    .where(eq(stripeSubscriptions.userId, userId));
+    .where(eq(stripeSubscriptions.id, subscriptionId));
 }
