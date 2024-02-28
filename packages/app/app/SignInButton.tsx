@@ -23,7 +23,6 @@ export const SignInButton: React.FC<{
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((_, session) => {
-      NProgress.start();
       if (session) {
         router.push("/editor");
       }

@@ -106,12 +106,14 @@ export const SideBar: React.FC<{
             <div className="text-gray-900 font-medium text-sm">{userName}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Billing</DropdownMenuLabel>
             {isPremium ? (
               <>
-                <div className="flex items-center justify-between px-2 py-1.5 text-sm">
-                  <span>Seat</span>
+                <DropdownMenuItem onClick={onOpenCustomerPortal}>
+                  Manage Subscription...
+                </DropdownMenuItem>
+                <div className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm">
+                  <span>Quantity</span>
                   <div className="flex items-center gap-2">
                     <Button
                       variant="outline"
@@ -152,17 +154,14 @@ export const SideBar: React.FC<{
                     </Button>
                   </div>
                 </div>
-                <DropdownMenuItem onClick={onOpenCustomerPortal}>
-                  Manage Subscription
-                </DropdownMenuItem>
               </>
             ) : (
               <DropdownMenuItem onClick={onOpenCheckoutPage}>
-                Subscribe Pro...
+                Subscribe...
               </DropdownMenuItem>
             )}
-
             <DropdownMenuSeparator />
+            <DropdownMenuLabel>Account</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={async () => {
                 NProgress.start();
