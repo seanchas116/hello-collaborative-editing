@@ -1,5 +1,6 @@
 import {
   customType,
+  integer,
   pgEnum,
   pgTable,
   text,
@@ -67,6 +68,7 @@ export const stripeSubscriptions = pgTable("stripe_subscriptions", {
     .notNull(),
   status: stripeSubscriptionStatus("status").notNull(),
   priceId: text("priceId").notNull(),
+  quantity: integer("quantity").notNull().default(1),
   metadata: customJsonb("metadata").notNull(),
   data: customJsonb("data").notNull(),
 });

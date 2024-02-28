@@ -1,0 +1,1 @@
+ALTER TABLE "stripe_subscriptions" ADD COLUMN "quantity" integer DEFAULT 1 NOT NULL;
