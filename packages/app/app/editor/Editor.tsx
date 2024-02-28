@@ -12,6 +12,8 @@ import { EditorState } from "./EditorState";
 import styled from "styled-components";
 import twColors from "tailwindcss/colors";
 import { User } from "@supabase/supabase-js";
+import { observer } from "mobx-react-lite";
+import { Icon } from "@iconify/react";
 
 const userColors = [
   twColors.blue[500],
@@ -111,7 +113,7 @@ export const Editor: React.FC<{
 const EditorImpl: React.FC<{
   className?: string;
   editorState: EditorState;
-}> = ({ className, editorState }) => {
+}> = observer(({ className, editorState }) => {
   const editor = useEditor({
     extensions: [
       Placeholder.configure(),
@@ -147,7 +149,7 @@ const EditorImpl: React.FC<{
     ],
   });
 
-  return (
+  return editorState.isLoaded ? (
     <div className={twMerge("px-16", className)}>
       <div className="flex">
         <button className="ml-auto bg-blue-500 px-3 py-1.5 text-sm text-white rounded-full m-5 font-semibold">
@@ -159,5 +161,12 @@ const EditorImpl: React.FC<{
         <StyledEditorContent editor={editor} className="prose" />
       </div>
     </div>
+  ) : (
+    <div className="flex-1 flex items-center justify-center">
+      <Icon
+        icon="svg-spinners:90-ring-with-bg"
+        className="text-gray-500 text-2xl"
+      />
+    </div>
   );
-};
+});

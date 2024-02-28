@@ -3,6 +3,7 @@ import * as awarenessProtocol from "y-protocols/awareness.js";
 import { User } from "@supabase/supabase-js";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import { generateCollaborativeAuthToken } from "@/actions/file";
+import { makeObservable, observable, runInAction } from "mobx";
 
 const messageTypes = {
   update: 1,
@@ -20,7 +21,7 @@ export class EditorState {
     this.fileID = fileID;
     this.ydoc = new Y.Doc();
     this.awareness = new awarenessProtocol.Awareness(this.ydoc);
-
+    makeObservable(this);
     void this.openConnection();
   }
 
@@ -29,6 +30,8 @@ export class EditorState {
   readonly ydoc: Y.Doc;
   readonly awareness: awarenessProtocol.Awareness;
   readonly disposers: (() => void)[] = [];
+
+  @observable isLoaded = false;
 
   private async openConnection() {
     const ws = new ReconnectingWebSocket(async () => {
@@ -93,6 +96,10 @@ export class EditorState {
           Y.applyUpdate(this.ydoc, array.subarray(1));
           break;
       }
+
+      runInAction(() => {
+        this.isLoaded = true;
+      });
     });
 
     this.disposers.push(() => {
