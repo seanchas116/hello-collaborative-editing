@@ -16,6 +16,7 @@ import { User } from "@supabase/supabase-js";
 import { checkoutWithStripe, createStripePortal } from "@/actions/stripe";
 import { Button } from "@/components/ui/button";
 import { createFile } from "@/actions/file";
+import { useToast } from "@/components/ui/use-toast";
 
 export const SideBar: React.FC<{
   user: User;
@@ -23,6 +24,8 @@ export const SideBar: React.FC<{
   files: File[];
   fileID?: string;
 }> = ({ user, isPremium, files, fileID }) => {
+  const { toast } = useToast();
+
   const supabase = createClient();
 
   const userName = user?.user_metadata.name;
@@ -39,9 +42,28 @@ export const SideBar: React.FC<{
     }
   }, [fileID]);
 
-  const onCheckout = async () => {
-    const url = await checkoutWithStripe();
-    window.open(url, "_blank");
+  const onOpenCheckoutPage = async () => {
+    try {
+      const url = await checkoutWithStripe();
+      window.open(url, "_blank");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Couldn't open the checkout page.",
+      });
+    }
+  };
+
+  const onOpenCustomerPortal = async () => {
+    try {
+      const portalURL = await createStripePortal();
+      window.open(portalURL, "_blank");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Couldn't open the customer portal.",
+      });
+    }
   };
 
   return (
@@ -69,17 +91,12 @@ export const SideBar: React.FC<{
                     </Button>
                   </div>
                 </div>
-                <DropdownMenuItem
-                  onClick={async () => {
-                    const portalURL = await createStripePortal();
-                    window.open(portalURL, "_blank");
-                  }}
-                >
+                <DropdownMenuItem onClick={onOpenCustomerPortal}>
                   Manage Subscription
                 </DropdownMenuItem>
               </>
             ) : (
-              <DropdownMenuItem onClick={onCheckout}>
+              <DropdownMenuItem onClick={onOpenCheckoutPage}>
                 Subscribe Pro...
               </DropdownMenuItem>
             )}

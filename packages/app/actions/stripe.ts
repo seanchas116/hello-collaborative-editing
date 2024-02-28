@@ -3,7 +3,6 @@
 import Stripe from "stripe";
 import { stripe } from "@/utils/stripe/config";
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 import { getOrCreateStripeCustomer } from "@/usecases/stripe-customers/get-or-create";
 
 export async function checkoutWithStripe(): Promise<string> {
@@ -65,7 +64,7 @@ export async function checkoutWithStripe(): Promise<string> {
     return session.url;
   } catch (error) {
     console.error(error);
-    redirect("/error");
+    throw new Error("Could not open checkout page.");
   }
 }
 
@@ -111,6 +110,6 @@ export async function createStripePortal() {
     }
   } catch (error) {
     console.error(error);
-    redirect("/error");
+    throw new Error("Could not open billing portal");
   }
 }
