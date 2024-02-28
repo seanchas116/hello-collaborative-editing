@@ -13,14 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { checkoutWithStripe } from "@/utils/stripe/server";
+import { checkoutWithStripe, createStripePortal } from "@/utils/stripe/server";
+import { Button } from "@/components/ui/button";
 
 export const SideBar: React.FC<{
   user: User;
+  isPremium: boolean;
   files: File[];
   createFile(): Promise<void>;
   fileID?: string;
-}> = ({ user, files, createFile, fileID }) => {
+}> = ({ user, isPremium, files, createFile, fileID }) => {
   const supabase = createClient();
 
   const userName = user?.user_metadata.name;
@@ -53,9 +55,36 @@ export const SideBar: React.FC<{
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onCheckout}>
-              Subscribe Pro...
-            </DropdownMenuItem>
+            {isPremium ? (
+              <>
+                <div className="flex items-center justify-between px-2 py-1.5 text-sm">
+                  <span>Seat</span>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="icon">
+                      <Icon icon="material-symbols:remove" />
+                    </Button>
+                    <span>1</span>
+                    <Button variant="outline" size="icon">
+                      <Icon icon="material-symbols:add" />
+                    </Button>
+                  </div>
+                </div>
+                <DropdownMenuItem
+                  onClick={async () => {
+                    const portalURL = await createStripePortal();
+                    window.open(portalURL, "_blank");
+                  }}
+                >
+                  Manage Subscription
+                </DropdownMenuItem>
+              </>
+            ) : (
+              <DropdownMenuItem onClick={onCheckout}>
+                Subscribe Pro...
+              </DropdownMenuItem>
+            )}
+
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async () => {
                 await supabase.auth.signOut();

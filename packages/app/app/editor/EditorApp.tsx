@@ -12,15 +12,24 @@ const Editor = dynamic(() => import("./Editor").then((m) => m.Editor), {
 
 export const EditorApp: React.FC<{
   user: User;
+  isPremium: boolean;
   fileID?: string;
   files: File[];
   createFile: () => Promise<void>;
   generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
-}> = ({ user, fileID, files, createFile, generateCollaborativeAuthToken }) => {
+}> = ({
+  user,
+  isPremium,
+  fileID,
+  files,
+  createFile,
+  generateCollaborativeAuthToken,
+}) => {
   return (
     <main className="flex">
       <SideBar
         user={user}
+        isPremium={isPremium}
         files={files}
         createFile={createFile}
         fileID={fileID}

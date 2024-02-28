@@ -102,7 +102,7 @@ export async function checkoutWithStripe(): Promise<string> {
   }
 }
 
-export async function createStripePortal(currentPath: string) {
+export async function createStripePortal() {
   try {
     const supabase = createClient();
     const {
