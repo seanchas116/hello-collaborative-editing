@@ -1,10 +1,14 @@
-# Collaborative Editor Frontend
+# Collaborative Editor App
 
 ## Develop
 
-### Setup Supabase
+### Setup services
 
-Create a new Supabase project.
+- Supabase
+  - Setup Google auth
+- Stripe
+  - Create a subscription product
+  - Configure the customer portal
 
 ### Set environment variables
 
@@ -27,3 +31,10 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Receive Stripe webhooks locally
+
+```bash
+stripe login
+pnpm dev:stripe-webhook
+```
