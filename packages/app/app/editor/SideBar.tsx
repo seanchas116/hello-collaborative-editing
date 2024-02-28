@@ -105,8 +105,8 @@ export const SideBar: React.FC<{
     <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm border-r border-gray-200">
       <div className="m-2 flex flex-col">
         <DropdownMenu>
-          <DropdownMenuTrigger className="items-center flex gap-2 p-2">
-            <img className="w-8 h-8 rounded-2xl" src={userPicture} />
+          <DropdownMenuTrigger className="items-center flex gap-2 p-2 rounded-full aria-expanded:bg-gray-100 hover:bg-gray-100">
+            <img className="w-8 h-8 rounded-full" src={userPicture} />
             <div className="text-gray-900 font-medium text-sm">{userName}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
@@ -191,7 +191,7 @@ export const SideBar: React.FC<{
             <button
               key={file.id}
               data-file-id={file.id}
-              className="flex flex-col items-start text-left gap-1 p-3 relative aria-pressed:bg-gray-200 rounded-xl"
+              className="flex flex-col items-start text-left gap-1 p-3 relative hover:bg-gray-100 aria-pressed:bg-gray-200 rounded-xl"
               aria-pressed={pathname === `/editor/${file.id}`}
               onClick={() => {
                 setSelectedFileID(file.id);
@@ -213,7 +213,7 @@ export const SideBar: React.FC<{
         </div>
       </div>
       <button
-        className="flex items-center gap-2 m-2 hover:bg-gray-200 p-2 rounded-full"
+        className="flex items-center gap-2 m-2 hover:bg-gray-100 p-2 rounded-full"
         onClick={onAddFile}
       >
         <div className="p-2 bg-blue-500 text-white rounded-full">
