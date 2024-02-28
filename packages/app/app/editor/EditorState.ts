@@ -2,8 +2,9 @@ import * as Y from "yjs";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { User } from "@supabase/supabase-js";
 import ReconnectingWebSocket from "reconnecting-websocket";
-import { generateCollaborativeAuthToken } from "@/actions/file";
-import { makeObservable, observable, runInAction } from "mobx";
+import { generateCollaborativeAuthToken, getFile } from "@/actions/file";
+import { action, makeObservable, observable, runInAction } from "mobx";
+import { File } from "@/db/schema";
 
 const messageTypes = {
   update: 1,
@@ -23,6 +24,12 @@ export class EditorState {
     this.awareness = new awarenessProtocol.Awareness(this.ydoc);
     makeObservable(this);
     void this.openConnection();
+
+    getFile(fileID).then(
+      action((file) => {
+        this.fileInfo = file;
+      })
+    );
   }
 
   readonly user: User;
@@ -32,6 +39,7 @@ export class EditorState {
   readonly disposers: (() => void)[] = [];
 
   @observable isLoaded = false;
+  @observable.ref fileInfo: File | undefined = undefined;
 
   private async openConnection() {
     const ws = new ReconnectingWebSocket(async () => {

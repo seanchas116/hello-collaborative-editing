@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export async function createFile() {
   const supabase = createClient();
@@ -26,6 +26,26 @@ export async function createFile() {
 
   revalidatePath("/editor");
   redirect(`/editor?file=${file.id}`);
+}
+
+export async function getFile(id: string) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data?.user) {
+    throw new Error("User not found");
+  }
+
+  const [file] = await db
+    .select()
+    .from(files)
+    .where(and(eq(files.ownerId, data.user.id), eq(files.id, id)));
+
+  if (!file) {
+    throw new Error("File not found");
+  }
+
+  return file;
 }
 
 export async function generateCollaborativeAuthToken(fileID: string) {

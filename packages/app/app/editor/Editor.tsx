@@ -126,7 +126,10 @@ const EditorImpl: React.FC<{
         </button>
       </div>
       <div className="max-w-4xl mx-auto mt-12">
-        <h1 className="font-bold text-3xl mb-12">TODO: Show Title</h1>
+        <input
+          className="font-bold text-3xl mb-12 w-full"
+          value={editorState.fileInfo?.name ?? ""}
+        />
         <StyledEditorContent editor={editor} className="prose" />
       </div>
     </div>
