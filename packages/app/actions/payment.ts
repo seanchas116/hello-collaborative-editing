@@ -5,7 +5,7 @@ import { stripe } from "@/utils/stripe/config";
 import { createClient } from "@/utils/supabase/server";
 import { getOrCreateStripeCustomer } from "@/usecases/stripe-customers/get-or-create";
 
-export async function checkoutWithStripe(): Promise<string> {
+export async function checkoutWithStripe(returnURL: string): Promise<string> {
   try {
     // Get the user from Supabase auth
     const supabase = createClient();
@@ -42,8 +42,8 @@ export async function checkoutWithStripe(): Promise<string> {
           quantity: 1,
         },
       ],
-      cancel_url: process.env.NEXT_PUBLIC_SITE_URL,
-      success_url: process.env.NEXT_PUBLIC_SITE_URL,
+      cancel_url: returnURL,
+      success_url: returnURL,
     };
 
     // Create a checkout session in Stripe
@@ -68,7 +68,7 @@ export async function checkoutWithStripe(): Promise<string> {
   }
 }
 
-export async function createStripePortal() {
+export async function createStripePortal(returnURL: string) {
   try {
     const supabase = createClient();
     const {
@@ -98,7 +98,7 @@ export async function createStripePortal() {
     try {
       const { url } = await stripe.billingPortal.sessions.create({
         customer,
-        return_url: process.env.NEXT_PUBLIC_SITE_URL,
+        return_url: returnURL,
       });
       if (!url) {
         throw new Error("Could not create billing portal");

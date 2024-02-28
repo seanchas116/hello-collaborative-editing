@@ -13,7 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { checkoutWithStripe, createStripePortal } from "@/actions/payment";
+import {
+  checkoutWithStripe as createStripeCheckoutURL,
+  createStripePortal as createStripePortalURL,
+} from "@/actions/payment";
 import { Button } from "@/components/ui/button";
 import { createFile } from "@/actions/file";
 import { useToast } from "@/components/ui/use-toast";
@@ -44,8 +47,7 @@ export const SideBar: React.FC<{
 
   const onOpenCheckoutPage = async () => {
     try {
-      const url = await checkoutWithStripe();
-      window.open(url, "_blank");
+      location.href = await createStripeCheckoutURL(location.href);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -56,8 +58,7 @@ export const SideBar: React.FC<{
 
   const onOpenCustomerPortal = async () => {
     try {
-      const portalURL = await createStripePortal();
-      window.open(portalURL, "_blank");
+      location.href = await createStripePortalURL(location.href);
     } catch (error) {
       toast({
         variant: "destructive",
