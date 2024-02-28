@@ -2,6 +2,7 @@ import * as Y from "yjs";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { User } from "@supabase/supabase-js";
 import ReconnectingWebSocket from "reconnecting-websocket";
+import { generateCollaborativeAuthToken } from "@/actions/file";
 
 const messageTypes = {
   update: 1,
@@ -11,18 +12,12 @@ const messageTypes = {
 interface EditorStateOptions {
   user: User;
   fileID: string;
-  generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
 }
 
 export class EditorState {
-  constructor({
-    user,
-    fileID,
-    generateCollaborativeAuthToken,
-  }: EditorStateOptions) {
+  constructor({ user, fileID }: EditorStateOptions) {
     this.user = user;
     this.fileID = fileID;
-    this.generateCollaborativeAuthToken = generateCollaborativeAuthToken;
     this.ydoc = new Y.Doc();
     this.awareness = new awarenessProtocol.Awareness(this.ydoc);
 
@@ -31,13 +26,12 @@ export class EditorState {
 
   readonly user: User;
   readonly fileID: string;
-  readonly generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
   readonly ydoc: Y.Doc;
   readonly awareness: awarenessProtocol.Awareness;
 
   private async openConnection() {
     const ws = new ReconnectingWebSocket(async () => {
-      const token = await this.generateCollaborativeAuthToken(this.fileID);
+      const token = await generateCollaborativeAuthToken(this.fileID);
 
       return `wss://${process.env.NEXT_PUBLIC_CF_WORKER_URL!.replace(
         "https://",

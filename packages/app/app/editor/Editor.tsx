@@ -88,11 +88,10 @@ export const Editor: React.FC<{
   className?: string;
   user: User;
   fileID: string;
-  generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
-}> = ({ className, user, fileID, generateCollaborativeAuthToken }) => {
+}> = ({ className, user, fileID }) => {
   const editorState = useMemo(
-    () => new EditorState({ user, fileID, generateCollaborativeAuthToken }),
-    [user, fileID, generateCollaborativeAuthToken]
+    () => new EditorState({ user, fileID }),
+    [user, fileID]
   );
 
   const editor = useEditor({

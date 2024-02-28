@@ -15,33 +15,17 @@ export const EditorApp: React.FC<{
   isPremium: boolean;
   fileID?: string;
   files: File[];
-  createFile: () => Promise<void>;
-  generateCollaborativeAuthToken: (fileID: string) => Promise<string>;
-}> = ({
-  user,
-  isPremium,
-  fileID,
-  files,
-  createFile,
-  generateCollaborativeAuthToken,
-}) => {
+}> = ({ user, isPremium, fileID, files }) => {
   return (
     <main className="flex">
       <SideBar
         user={user}
         isPremium={isPremium}
         files={files}
-        createFile={createFile}
         fileID={fileID}
       />
       {fileID && (
-        <Editor
-          key={fileID}
-          className="flex-1"
-          user={user}
-          fileID={fileID}
-          generateCollaborativeAuthToken={generateCollaborativeAuthToken}
-        />
+        <Editor key={fileID} className="flex-1" user={user} fileID={fileID} />
       )}
     </main>
   );

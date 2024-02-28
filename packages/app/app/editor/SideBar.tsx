@@ -13,16 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { checkoutWithStripe, createStripePortal } from "@/utils/stripe/server";
+import { checkoutWithStripe, createStripePortal } from "@/actions/stripe";
 import { Button } from "@/components/ui/button";
+import { createFile } from "@/actions/file";
 
 export const SideBar: React.FC<{
   user: User;
   isPremium: boolean;
   files: File[];
-  createFile(): Promise<void>;
   fileID?: string;
-}> = ({ user, isPremium, files, createFile, fileID }) => {
+}> = ({ user, isPremium, files, fileID }) => {
   const supabase = createClient();
 
   const userName = user?.user_metadata.name;
