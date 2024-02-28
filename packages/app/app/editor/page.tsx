@@ -29,8 +29,10 @@ export default async function EditorPage({
     redirect("/");
   }
 
-  const files = await getFiles(data.user);
-  const subscription = await getSubscriptionForUser(data.user.id);
+  const [files, subscription] = await Promise.all([
+    getFiles(data.user),
+    getSubscriptionForUser(data.user.id),
+  ]);
 
   return (
     <EditorApp
