@@ -5,6 +5,7 @@ import ReconnectingWebSocket from "reconnecting-websocket";
 import { generateCollaborativeAuthToken, updateFile } from "@/actions/file";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { File } from "@/db/schema";
+import debounce from "just-debounce-it";
 
 const messageTypes = {
   update: 1,
@@ -40,8 +41,12 @@ export class EditorState {
 
   @action async updateFileName(name: string) {
     this.fileName = name;
-    await updateFile(this.fileID, { name });
+    this.updateRemoteFileName(name);
   }
+
+  private updateRemoteFileName = debounce((name: string) => {
+    void updateFile(this.fileID, { name });
+  }, 300);
 
   private async openConnection() {
     const ws = new ReconnectingWebSocket(async () => {
