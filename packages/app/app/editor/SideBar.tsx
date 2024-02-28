@@ -92,6 +92,11 @@ export const SideBar: React.FC<{
     }
   };
 
+  const [incrementingSeatInProgress, setIncrementingSeatInProgress] =
+    useState(false);
+  const [decrementingSeatInProgress, setDecrementingSeatInProgress] =
+    useState(false);
+
   return (
     <nav className="w-[256px] bg-gray-50 h-screen flex flex-col text-sm border-r border-gray-200">
       <div className="m-2 flex flex-col">
@@ -111,21 +116,39 @@ export const SideBar: React.FC<{
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => {
-                        changeQuantity(Math.max(0, seatCount - 1));
+                      onClick={async () => {
+                        try {
+                          setDecrementingSeatInProgress(true);
+                          await changeQuantity(Math.max(0, seatCount - 1));
+                        } finally {
+                          setDecrementingSeatInProgress(false);
+                        }
                       }}
                     >
-                      <Icon icon="material-symbols:remove" />
+                      {decrementingSeatInProgress ? (
+                        <Icon icon="svg-spinners:90-ring-with-bg" />
+                      ) : (
+                        <Icon icon="material-symbols:remove" />
+                      )}
                     </Button>
                     <span>{seatCount}</span>
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => {
-                        changeQuantity(seatCount + 1);
+                      onClick={async () => {
+                        try {
+                          setIncrementingSeatInProgress(true);
+                          await changeQuantity(seatCount + 1);
+                        } finally {
+                          setIncrementingSeatInProgress(false);
+                        }
                       }}
                     >
-                      <Icon icon="material-symbols:add" />
+                      {incrementingSeatInProgress ? (
+                        <Icon icon="svg-spinners:90-ring-with-bg" />
+                      ) : (
+                        <Icon icon="material-symbols:add" />
+                      )}
                     </Button>
                   </div>
                 </div>
