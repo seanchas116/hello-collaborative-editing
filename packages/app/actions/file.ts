@@ -25,7 +25,7 @@ export async function createFile() {
     .returning();
 
   revalidatePath("/editor");
-  redirect(`/editor?file=${file.id}`);
+  redirect(`/editor/${file.id}`);
 }
 
 export async function updateFile(
