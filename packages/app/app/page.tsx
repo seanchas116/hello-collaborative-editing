@@ -2,10 +2,23 @@ import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { SignInButton } from "./SignInButton";
 
-export default async function Home() {
+async function LaunchButton() {
   const supabase = createClient();
   const { data, error } = await supabase.auth.getUser();
 
+  return data.user ? (
+    <Link
+      href="/editor"
+      className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
+    >
+      Launch Editor
+    </Link>
+  ) : (
+    <SignInButton className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold" />
+  );
+}
+
+export default function Home() {
   return (
     <main className="w-screen h-screen flex items-center justify-center">
       <div className="flex-col items-center gap-16 flex">
@@ -28,16 +41,7 @@ export default async function Home() {
           </div>
         </div>
         <div className="gap-4 flex">
-          {data.user ? (
-            <Link
-              href="/editor"
-              className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
-            >
-              Launch Editor
-            </Link>
-          ) : (
-            <SignInButton className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold" />
-          )}
+          <LaunchButton />
           <a
             href="https://github.com/seanchas116/hello-collaborative-editing"
             target="_blank"

@@ -166,6 +166,7 @@ export const SideBar: React.FC<{
               onClick={async () => {
                 NProgress.start();
                 await supabase.auth.signOut();
+                NProgress.done();
                 router.push("/");
               }}
             >
