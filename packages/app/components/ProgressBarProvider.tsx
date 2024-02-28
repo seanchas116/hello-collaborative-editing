@@ -10,9 +10,9 @@ export const ProgressBarProvider: React.FC<{
     <>
       {children}
       <ProgressBar
-        height="4px"
-        color={colors.blue[500]}
-        options={{ showSpinner: false }}
+        // height="4px"
+        // color={colors.blue[500]}
+        // options={{ showSpinner: false }}
         shallowRouting
       />
     </>

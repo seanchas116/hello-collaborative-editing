@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { createFile } from "@/actions/file";
 import { useToast } from "@/components/ui/use-toast";
+import NProgress from "nprogress";
 
 export const SideBar: React.FC<{
   user: User;
@@ -49,23 +50,43 @@ export const SideBar: React.FC<{
 
   const onOpenCheckoutPage = async () => {
     try {
+      NProgress.start();
       location.href = await createStripeCheckoutURL(location.href);
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Couldn't open the checkout page.",
       });
+    } finally {
+      NProgress.done();
     }
   };
 
   const onOpenCustomerPortal = async () => {
     try {
+      NProgress.start();
       location.href = await createStripePortalURL(location.href);
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Couldn't open the customer portal.",
       });
+    } finally {
+      NProgress.done();
+    }
+  };
+
+  const onAddFile = async () => {
+    try {
+      NProgress.start();
+      await createFile();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Couldn't create a new file.",
+      });
+    } finally {
+      NProgress.done();
     }
   };
 
@@ -119,6 +140,7 @@ export const SideBar: React.FC<{
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async () => {
+                NProgress.start();
                 await supabase.auth.signOut();
                 router.push("/");
               }}
@@ -163,7 +185,7 @@ export const SideBar: React.FC<{
       </div>
       <button
         className="flex items-center gap-2 m-2 hover:bg-gray-200 p-2 rounded-full"
-        onClick={() => createFile()}
+        onClick={onAddFile}
       >
         <div className="p-2 bg-blue-500 text-white rounded-full">
           <Icon icon="icon-park-outline:write" className="text-base" />

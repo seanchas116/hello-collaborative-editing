@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import NProgress from "nprogress";
 
 export const SignInButton: React.FC<{
   className?: string;
@@ -11,6 +12,7 @@ export const SignInButton: React.FC<{
   const router = useRouter();
 
   const onClick = async () => {
+    NProgress.start();
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -21,6 +23,7 @@ export const SignInButton: React.FC<{
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((_, session) => {
+      NProgress.start();
       if (session) {
         router.push("/editor");
       }
