@@ -6,10 +6,11 @@ import {
 } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { stripe } from "@/utils/stripe/config";
+import { getSubscriptionForUser } from "./get";
 
 export type { StripeSubscription };
 
-export async function updateStripeSubscription(subscriptionId: string) {
+export async function updateSubscription(subscriptionId: string) {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
   const customerId =
@@ -46,4 +47,19 @@ export async function updateStripeSubscription(subscriptionId: string) {
       target: stripeCustomers.userId,
       set: values,
     });
+}
+
+export async function changeSubscriptionQuantity(
+  userId: string,
+  quantity: number
+) {
+  const subscriptionId = (await getSubscriptionForUser(userId)).id;
+  await stripe.subscriptions.update(subscriptionId, {
+    items: [
+      {
+        id: process.env.STRIPE_PRICE_ID,
+        quantity,
+      },
+    ],
+  });
 }

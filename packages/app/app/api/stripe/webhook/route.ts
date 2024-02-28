@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { stripe } from "@/utils/stripe/config";
-import { updateStripeSubscription } from "@/usecases/stripe-subscriptions/update";
+import { updateSubscription } from "@/usecases/stripe-subscriptions/update";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -24,14 +24,14 @@ export async function POST(req: Request) {
       case "customer.subscription.updated":
       case "customer.subscription.deleted":
         console.log(event.data.object);
-        await updateStripeSubscription(event.data.object.id);
+        await updateSubscription(event.data.object.id);
         break;
       case "checkout.session.completed":
         console.log(event.data.object);
         const checkoutSession = event.data.object as Stripe.Checkout.Session;
         if (checkoutSession.mode === "subscription") {
           const subscriptionId = checkoutSession.subscription as string;
-          await updateStripeSubscription(subscriptionId);
+          await updateSubscription(subscriptionId);
         }
         break;
       default:
