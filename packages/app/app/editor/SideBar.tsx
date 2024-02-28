@@ -76,9 +76,11 @@ export const SideBar: React.FC<{
     }
   };
 
+  const [addFileInProgress, setAddFileInProgress] = useState(false);
+
   const onAddFile = async () => {
     try {
-      NProgress.start();
+      setAddFileInProgress(true);
       await createFile();
     } catch (error) {
       toast({
@@ -86,7 +88,7 @@ export const SideBar: React.FC<{
         title: "Couldn't create a new file.",
       });
     } finally {
-      NProgress.done();
+      setAddFileInProgress(false);
     }
   };
 
@@ -188,7 +190,11 @@ export const SideBar: React.FC<{
         onClick={onAddFile}
       >
         <div className="p-2 bg-blue-500 text-white rounded-full">
-          <Icon icon="icon-park-outline:write" className="text-base" />
+          {addFileInProgress ? (
+            <Icon icon="svg-spinners:90-ring-with-bg" className="text-base" />
+          ) : (
+            <Icon icon="icon-park-outline:write" className="text-base" />
+          )}
         </div>
         Add Note
       </button>
