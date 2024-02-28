@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/db";
-import { files } from "@/db/schema";
+import { File, files } from "@/db/schema";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -46,6 +46,28 @@ export async function getFile(id: string) {
   }
 
   return file;
+}
+
+export async function updateFile(
+  id: string,
+  values: { name: string }
+): Promise<File> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data?.user) {
+    throw new Error("User not found");
+  }
+
+  const results = await db
+    .update(files)
+    .set(values)
+    .where(and(eq(files.ownerId, data.user.id), eq(files.id, id)))
+    .returning();
+
+  revalidatePath("/editor");
+
+  return results[0];
 }
 
 export async function generateCollaborativeAuthToken(fileID: string) {

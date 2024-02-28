@@ -2,7 +2,11 @@ import * as Y from "yjs";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { User } from "@supabase/supabase-js";
 import ReconnectingWebSocket from "reconnecting-websocket";
-import { generateCollaborativeAuthToken, getFile } from "@/actions/file";
+import {
+  generateCollaborativeAuthToken,
+  getFile,
+  updateFile,
+} from "@/actions/file";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { File } from "@/db/schema";
 
@@ -28,6 +32,7 @@ export class EditorState {
     getFile(fileID).then(
       action((file) => {
         this.fileInfo = file;
+        this.fileName = file.name ?? "";
       })
     );
   }
@@ -40,6 +45,16 @@ export class EditorState {
 
   @observable isLoaded = false;
   @observable.ref fileInfo: File | undefined = undefined;
+
+  @observable fileName = "";
+
+  @action async updateFileName(name: string) {
+    this.fileName = name;
+    const result = await updateFile(this.fileID, { name });
+    runInAction(() => {
+      this.fileInfo = result;
+    });
+  }
 
   private async openConnection() {
     const ws = new ReconnectingWebSocket(async () => {

@@ -6,7 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { EditorState } from "./EditorState";
 import styled from "styled-components";
@@ -128,7 +128,10 @@ const EditorImpl: React.FC<{
       <div className="max-w-4xl mx-auto mt-12">
         <input
           className="font-bold text-3xl mb-12 w-full"
-          value={editorState.fileInfo?.name ?? ""}
+          value={editorState.fileName}
+          onChange={(e) => {
+            editorState.updateFileName(e.target.value);
+          }}
         />
         <StyledEditorContent editor={editor} className="prose" />
       </div>
