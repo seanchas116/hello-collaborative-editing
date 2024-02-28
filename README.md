@@ -4,3 +4,4 @@
 - Supabase for auth and database
 - Cloudflare Durable Objects with Y.js for real-time collaboration
 - Tiptap for the rich text editor
+- Stripe for subscription payments

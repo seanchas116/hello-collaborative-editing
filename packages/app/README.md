@@ -6,7 +6,7 @@
 
 - Supabase
   - Setup Google auth
-- Stripe
+- (Optional) Stripe
   - Create a subscription product
   - Configure the customer portal
 
@@ -32,7 +32,7 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Receive Stripe webhooks locally
+### Receive Stripe webhooks locally (optional)
 
 ```bash
 stripe login
