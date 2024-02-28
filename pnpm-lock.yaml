@@ -92,8 +92,8 @@ importers:
         specifier: ^18
         version: 18.2.0(react@18.2.0)
       react-time-ago:
-        specifier: ^7.3.0
-        version: 7.3.0(javascript-time-ago@2.5.9)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^7.3.1
+        version: 7.3.1(javascript-time-ago@2.5.9)(react-dom@18.2.0)(react@18.2.0)
       reconnecting-websocket:
         specifier: ^4.4.0
         version: 4.4.0
@@ -4962,8 +4962,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /react-time-ago@7.3.0(javascript-time-ago@2.5.9)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-HQI5ECXx5Jnha1nwVW3bO2PZJmQsOwGXr56WN0nxB4m9kCwFF55meeDTnNOyJm23GHoFzBsFRl7hnITvAovJWw==}
+  /react-time-ago@7.3.1(javascript-time-ago@2.5.9)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-c6QKSRrnIhZiEbOa2PXdh1InNYpqX3wwXA0fuOFX4r/C2hdt5hNvjvKXbKbGWXAeumMi9DoS3oGPboEpgccnOQ==}
     peerDependencies:
       javascript-time-ago: ^2.3.7
       react: '>=0.16.8'
