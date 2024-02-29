@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { DetailedUser } from "@/types/DetailedUser";
 import { inviteUser } from "@/actions/file";
 import { EditorState } from "./EditorState";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export const ShareButton: React.FC<{
   editorState: EditorState;
@@ -14,6 +15,7 @@ export const ShareButton: React.FC<{
 }> = ({ editorState, className }) => {
   const user = editorState.user;
   const [email, setEmail] = useState("");
+  const [isInviting, setIsInviting] = useState(false);
 
   return (
     <Popover>
@@ -37,12 +39,21 @@ export const ShareButton: React.FC<{
               onChange={(e) => setEmail(e.target.value)}
             />
             <button
-              className="bg-blue-500 rounded-full px-3 py-1.5 text-sm text-white"
+              className="bg-blue-500 rounded-full px-3 py-1.5 text-sm text-white flex items-center gap-1"
               onClick={async () => {
-                await inviteUser(editorState.fileID, email);
+                try {
+                  setIsInviting(true);
+                  await inviteUser(editorState.fileID, email);
+                } finally {
+                  setIsInviting(false);
+                }
               }}
             >
-              Invite
+              {isInviting ? (
+                <Icon icon="svg-spinners:90-ring-with-bg" />
+              ) : (
+                <>Invite</>
+              )}
             </button>
           </div>
         </div>
