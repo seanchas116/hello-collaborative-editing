@@ -8,11 +8,12 @@ import { DetailedUser, toDetailedUser } from "@/types/DetailedUser";
 import { inviteUser } from "@/actions/file";
 import { EditorState } from "./EditorState";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { observer } from "mobx-react-lite";
 
 export const ShareButton: React.FC<{
   editorState: EditorState;
   className?: string;
-}> = ({ editorState, className }) => {
+}> = observer(({ editorState, className }) => {
   const user = editorState.user;
   const [email, setEmail] = useState("");
   const [isInviting, setIsInviting] = useState(false);
@@ -101,4 +102,4 @@ export const ShareButton: React.FC<{
       </PopoverContent>
     </Popover>
   );
-};
+});
