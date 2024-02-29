@@ -216,7 +216,7 @@ export const SideBar: React.FC<{
         className="flex items-center gap-2 m-2 hover:bg-gray-100 p-2 rounded-full"
         onClick={onAddFile}
       >
-        <div className="p-2 bg-blue-500 text-white rounded-full">
+        <div className="p-2 bg-gray-900 text-white rounded-full">
           {addFileInProgress ? (
             <Icon icon="svg-spinners:90-ring-with-bg" className="text-base" />
           ) : (

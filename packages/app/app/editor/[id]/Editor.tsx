@@ -6,16 +6,16 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { EditorState } from "./EditorState";
 import styled from "styled-components";
 import twColors from "tailwindcss/colors";
 import { User } from "@supabase/supabase-js";
 import { observer } from "mobx-react-lite";
-import { Icon } from "@iconify/react";
 import { File } from "@/db/schema";
 import { LoadingOverlay } from "./LoadingOverlay";
+import { ShareButton } from "./ShareButton";
 
 const userColors = [
   twColors.blue[500],
@@ -129,10 +129,8 @@ const EditorImpl: React.FC<{
 
   return editorState.isLoaded ? (
     <div className={twMerge("px-16", className)}>
-      <div className="flex">
-        <button className="ml-auto bg-blue-500 px-3 py-1.5 text-sm text-white rounded-full m-5 font-semibold">
-          Share
-        </button>
+      <div className="flex py-4">
+        <ShareButton className="ml-auto" />
       </div>
       <div className="max-w-4xl mx-auto mt-12">
         <input
