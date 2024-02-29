@@ -195,7 +195,14 @@ export const SideBar: React.FC<{
                 router.replace(`/editor/${file.id}`);
               }}
             >
-              <h2 className="font-medium text-gray-900">{file.name}</h2>
+              <h2 className="font-medium text-gray-900 flex items-center gap-2">
+                {file.name}
+                {file.ownerId !== user.id ? (
+                  <span className="text-xs text-sky-500 bg-sky-100 px-1 rounded">
+                    Shared
+                  </span>
+                ) : null}
+              </h2>
               <ReactTimeAgo
                 className="text-gray-500 text-xs"
                 date={file.createdAt!}
