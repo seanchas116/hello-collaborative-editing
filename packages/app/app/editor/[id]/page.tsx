@@ -6,9 +6,10 @@ import { and, eq } from "drizzle-orm";
 import { EditorWrap } from "./EditorWrap";
 import { toDetailedUser } from "@/types/DetailedUser";
 import { ExtendedFile } from "./EditorState";
+import { canAccess } from "@/app/entities/file";
 
 export default async function EditorPage({
-  params: { id },
+  params: { id: fileID },
 }: {
   params: { id: string };
 }) {
@@ -20,7 +21,7 @@ export default async function EditorPage({
   }
 
   const file = await db.query.files.findFirst({
-    where: and(eq(files.ownerId, data.user.id), eq(files.id, id)),
+    where: eq(files.id, fileID),
     with: {
       permissions: {
         with: {
@@ -29,8 +30,7 @@ export default async function EditorPage({
       },
     },
   });
-
-  if (!file) {
+  if (!file || !canAccess(file, data.user)) {
     redirect("/editor");
   }
 

@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import { and, eq } from "drizzle-orm";
 import { User } from "@supabase/supabase-js";
 import { authUsers } from "@/db/supabase-schema";
+import { canAccess } from "@/app/entities/file";
 
 async function authenticateUser(): Promise<User> {
   const supabase = createClient();
@@ -61,14 +62,18 @@ export async function generateCollaborativeAuthToken(fileID: string) {
     throw new Error("No secret found");
   }
 
-  // check if the user has access to the file
-  const [file] = await db
-    .select()
-    .from(files)
-    .where(and(eq(files.ownerId, user.id), eq(files.id, fileID)));
-
+  const file = await db.query.files.findFirst({
+    where: eq(files.id, fileID),
+    with: {
+      permissions: true,
+    },
+  });
   if (!file) {
-    throw new Error("User does not have access to the file");
+    throw new Error("File not found");
+  }
+
+  if (!canAccess(file, user)) {
+    throw new Error("File not found");
   }
 
   const token = jwt.sign(
