@@ -17,6 +17,7 @@ export interface ExtendedFile extends File {
   permissions: (Permission & {
     user: User;
   })[];
+  owner: User;
 }
 
 interface EditorStateOptions {

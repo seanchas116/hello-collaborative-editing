@@ -23,10 +23,10 @@ export const ShareButton: React.FC<{
 }> = observer(({ editorState, className }) => {
   const { toast } = useToast();
 
-  const user = editorState.user;
   const [email, setEmail] = useState("");
   const [isInviting, setIsInviting] = useState(false);
   const [removingUsers, setRemovingUsers] = useState(new Set<string>());
+  const owner = toDetailedUser(editorState.fileInfo.owner);
 
   return (
     <Popover>
@@ -81,12 +81,12 @@ export const ShareButton: React.FC<{
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar>
-                <AvatarImage src={user.picture} alt="Image" />
-                <AvatarFallback>IN</AvatarFallback>
+                <AvatarImage src={owner.picture} alt="Image" />
+                <AvatarFallback>{owner.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium leading-none">{user.name}</p>
-                <p className="text-sm text-muted-foreground">{user.email}</p>
+                <p className="text-sm font-medium leading-none">{owner.name}</p>
+                <p className="text-sm text-muted-foreground">{owner.email}</p>
               </div>
             </div>
             <div>Owner</div>
@@ -96,6 +96,8 @@ export const ShareButton: React.FC<{
               return;
             }
 
+            const user = toDetailedUser(permission.user);
+
             // TODO: user info
             return (
               <div
@@ -104,17 +106,15 @@ export const ShareButton: React.FC<{
               >
                 <div className="flex items-center gap-4">
                   <Avatar>
-                    <AvatarImage src="/avatars/05.png" alt="Image" />
-                    <AvatarFallback>
-                      {toDetailedUser(permission.user).name.charAt(0)}
-                    </AvatarFallback>
+                    <AvatarImage src={user.picture} alt="Image" />
+                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm font-medium leading-none">
-                      {toDetailedUser(permission.user).name}
+                      {user.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {permission.user.email}
+                      {user.email}
                     </p>
                   </div>
                 </div>

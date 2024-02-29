@@ -23,8 +23,12 @@ export const files = pgTable("files", {
   updatedAt: timestamp("updatedAt").defaultNow(),
 });
 
-export const filesRelations = relations(files, ({ many }) => ({
+export const filesRelations = relations(files, ({ many, one }) => ({
   permissions: many(permissions),
+  owner: one(authUsers, {
+    fields: [files.ownerId],
+    references: [authUsers.id],
+  }),
 }));
 
 export const permissions = pgTable(

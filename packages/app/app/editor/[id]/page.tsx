@@ -28,6 +28,7 @@ export default async function EditorPage({
           user: true,
         },
       },
+      owner: true,
     },
   });
   if (!file || !canAccess(file, data.user)) {
@@ -37,7 +38,7 @@ export default async function EditorPage({
   return (
     <EditorWrap
       user={toDetailedUser(data.user)}
-      fileInfo={file as any as ExtendedFile}
+      fileInfo={file as ExtendedFile}
     />
   );
 }
