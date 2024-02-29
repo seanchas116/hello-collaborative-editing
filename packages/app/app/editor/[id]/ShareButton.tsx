@@ -5,11 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { DetailedUser, toDetailedUser } from "@/types/DetailedUser";
-import { inviteUser } from "@/actions/file";
+import { inviteUser, removeInvitedUser } from "@/actions/file";
 import { EditorState } from "./EditorState";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { observer } from "mobx-react-lite";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const ShareButton: React.FC<{
   editorState: EditorState;
@@ -20,6 +26,7 @@ export const ShareButton: React.FC<{
   const user = editorState.user;
   const [email, setEmail] = useState("");
   const [isInviting, setIsInviting] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   return (
     <Popover>
@@ -92,7 +99,9 @@ export const ShareButton: React.FC<{
                 <div className="flex items-center gap-4">
                   <Avatar>
                     <AvatarImage src="/avatars/05.png" alt="Image" />
-                    <AvatarFallback>IN</AvatarFallback>
+                    <AvatarFallback>
+                      {toDetailedUser(permission.user).name.charAt(0)}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm font-medium leading-none">
@@ -103,7 +112,36 @@ export const ShareButton: React.FC<{
                     </p>
                   </div>
                 </div>
-                <div>Can Edit</div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center gap-1">
+                    Can Edit
+                    <Icon icon="material-symbols:keyboard-arrow-down" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      className="text-red-500"
+                      onClick={async () => {
+                        try {
+                          setIsRemoving(true);
+                          await removeInvitedUser(
+                            editorState.fileID,
+                            permission.userId
+                          );
+                        } catch (e) {
+                          toast({
+                            variant: "destructive",
+                            title: "Couldn't remove the user.",
+                            description: String(e),
+                          });
+                        } finally {
+                          setIsRemoving(false);
+                        }
+                      }}
+                    >
+                      Remove...
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             );
           })}

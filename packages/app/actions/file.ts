@@ -119,3 +119,26 @@ export async function inviteUser(fileID: string, email: string): Promise<void> {
 
   revalidatePath("/editor", "layout");
 }
+
+export async function removeInvitedUser(
+  fileID: string,
+  userID: string
+): Promise<void> {
+  const user = await authenticateUser();
+
+  // check if the user has access to the file
+  const [file] = await db
+    .select()
+    .from(files)
+    .where(and(eq(files.ownerId, user.id), eq(files.id, fileID)));
+
+  if (!file) {
+    throw new Error("User does not have access to the file");
+  }
+
+  await db
+    .delete(permissions)
+    .where(and(eq(permissions.fileId, fileID), eq(permissions.userId, userID)));
+
+  revalidatePath("/editor", "layout");
+}
