@@ -22,10 +22,7 @@ export const ShareButton: React.FC<{
           Share
         </button>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-[400px] text-sm flex flex-col p-0 rounded-xl border-gray-100 text-gray-900"
-        align="end"
-      >
+      <PopoverContent className="w-[400px] flex flex-col p-0" align="end">
         <div className="p-4">
           <h2 className="font-medium mb-4">Share this file</h2>
           <div className="flex gap-4 items-center">
