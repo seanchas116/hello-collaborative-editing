@@ -1,16 +1,24 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { SignInButton } from "./SignInButton";
+import { toDetailedUser } from "@/types/DetailedUser";
 
 async function LaunchButton() {
   const supabase = createClient();
-  const { data, error } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
-  return data.user ? (
+  return user ? (
     <Link
       href="/editor"
-      className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
+      className="p-3 pr-6 bg-blue-500 hover:bg-blue-600 rounded-3xl gap-2.5 flex text-white text-base font-semibold"
     >
+      <img
+        src={toDetailedUser(user).picture}
+        className="w-6 h-6 rounded-full"
+      />
       Launch Editor
     </Link>
   ) : (
