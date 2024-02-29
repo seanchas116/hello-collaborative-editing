@@ -5,7 +5,7 @@ import { db } from "@/db/db";
 import { File, files, permissions } from "@/db/schema";
 import { desc, eq, inArray, or } from "drizzle-orm";
 import { getSubscriptionForUser } from "@/models/usecases/stripe-subscriptions/get";
-import { SideBar } from "./SideBar";
+import { SideBar } from "./side-bar";
 import { toDetailedUser } from "@/models/entities/detailed-user";
 
 async function getFiles(user: User): Promise<File[]> {

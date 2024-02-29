@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 
 export const EditorWrap = dynamic(
-  () => import("./Editor").then((m) => m.Editor),
+  () => import("./editor").then((m) => m.Editor),
   {
     ssr: false,
   }

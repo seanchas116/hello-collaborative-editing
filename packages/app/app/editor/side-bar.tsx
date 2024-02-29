@@ -1,8 +1,8 @@
 "use client";
 
 import type { File } from "@/db/schema";
-import { Icon } from "@/components/Icon";
-import { ReactTimeAgo } from "@/components/TimeAgo";
+import { Icon } from "@/components/icon";
+import { ReactTimeAgo } from "@/components/time-ago";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {

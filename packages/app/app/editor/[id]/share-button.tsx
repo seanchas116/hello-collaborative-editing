@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { DetailedUser, toDetailedUser } from "@/models/entities/detailed-user";
 import { inviteUser, removeInvitedUser } from "@/actions/file";
-import { EditorState } from "./EditorState";
+import { EditorState } from "./editor-state";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { observer } from "mobx-react-lite";
 import { useToast } from "@/components/ui/use-toast";

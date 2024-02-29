@@ -8,12 +8,12 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import React, { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
-import { EditorState, ExtendedFile } from "./EditorState";
+import { EditorState, ExtendedFile } from "./editor-state";
 import styled from "styled-components";
 import twColors from "tailwindcss/colors";
 import { observer } from "mobx-react-lite";
-import { LoadingOverlay } from "./LoadingOverlay";
-import { ShareButton } from "./ShareButton";
+import { LoadingOverlay } from "./loading-overlay";
+import { ShareButton } from "./share-button";
 import { DetailedUser } from "@/models/entities/detailed-user";
 
 const userColors = [

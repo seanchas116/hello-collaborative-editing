@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { SignInButton } from "./SignInButton";
+import { SignInButton } from "./sign-in-button";
 import { toDetailedUser } from "@/models/entities/detailed-user";
 
 async function LaunchButton() {

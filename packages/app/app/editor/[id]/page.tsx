@@ -3,9 +3,9 @@ import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db/db";
 import { files } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { EditorWrap } from "./EditorWrap";
+import { EditorWrap } from "./editor-wrap";
 import { toDetailedUser } from "@/models/entities/detailed-user";
-import { ExtendedFile } from "./EditorState";
+import { ExtendedFile } from "./editor-state";
 import { canAccess } from "@/models/entities/file";
 
 export default async function EditorPage({
