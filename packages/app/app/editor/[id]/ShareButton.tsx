@@ -26,7 +26,7 @@ export const ShareButton: React.FC<{
   const user = editorState.user;
   const [email, setEmail] = useState("");
   const [isInviting, setIsInviting] = useState(false);
-  const [isRemoving, setIsRemoving] = useState(false);
+  const [removingUsers, setRemovingUsers] = useState(new Set<string>());
 
   return (
     <Popover>
@@ -90,6 +90,10 @@ export const ShareButton: React.FC<{
             <div>Owner</div>
           </div>
           {editorState.fileInfo.permissions.map((permission) => {
+            if (removingUsers.has(permission.userId)) {
+              return;
+            }
+
             // TODO: user info
             return (
               <div
@@ -122,19 +126,22 @@ export const ShareButton: React.FC<{
                       className="text-red-500"
                       onClick={async () => {
                         try {
-                          setIsRemoving(true);
+                          setRemovingUsers(
+                            new Set(removingUsers).add(permission.userId)
+                          );
                           await removeInvitedUser(
                             editorState.fileID,
                             permission.userId
                           );
                         } catch (e) {
+                          const newRemovingUsers = new Set(removingUsers);
+                          newRemovingUsers.delete(permission.userId);
+                          setRemovingUsers(newRemovingUsers);
                           toast({
                             variant: "destructive",
                             title: "Couldn't remove the user.",
                             description: String(e),
                           });
-                        } finally {
-                          setIsRemoving(false);
                         }
                       }}
                     >
