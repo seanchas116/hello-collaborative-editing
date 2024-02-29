@@ -53,8 +53,10 @@ export const ShareButton: React.FC<{
               className="bg-blue-500 rounded-full px-3 py-1.5 text-sm text-white flex items-center gap-1"
               onClick={async () => {
                 try {
+                  setRemovingUsers(new Set());
                   setIsInviting(true);
                   await inviteUser(editorState.fileID, email);
+                  setEmail("");
                 } catch (e) {
                   toast({
                     variant: "destructive",
