@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { User } from "@supabase/supabase-js";
 import { db } from "@/db/db";
 import { File, files, permissions } from "@/db/schema";

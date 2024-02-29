@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { stripe } from "@/utils/stripe/config";
+import { stripe } from "@/lib/stripe/config";
 import { updateSubscription } from "@/models/usecases/stripe-subscriptions/update";
 
 export async function POST(req: Request) {

@@ -1,4 +1,4 @@
-import { stripe } from "@/utils/stripe/config";
+import { stripe } from "@/lib/stripe/config";
 import { db } from "@/db/db";
 import { StripeCustomer, stripeCustomers } from "@/db/schema";
 import { eq } from "drizzle-orm";

@@ -6,7 +6,7 @@ import {
   stripeSubscriptions,
 } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { stripe } from "@/utils/stripe/config";
+import { stripe } from "@/lib/stripe/config";
 import { getSubscriptionForUser } from "./get";
 
 export type { StripeSubscription };

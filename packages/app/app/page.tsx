@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { SignInButton } from "./SignInButton";
 import { toDetailedUser } from "@/models/entities/detailed-user";

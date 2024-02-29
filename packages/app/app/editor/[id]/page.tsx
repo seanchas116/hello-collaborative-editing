@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db/db";
 import { files } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
