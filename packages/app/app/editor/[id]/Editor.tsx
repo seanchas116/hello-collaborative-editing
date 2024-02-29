@@ -130,7 +130,7 @@ const EditorImpl: React.FC<{
   return editorState.isLoaded ? (
     <div className={twMerge("px-16", className)}>
       <div className="flex py-4">
-        <ShareButton user={editorState.user} className="ml-auto" />
+        <ShareButton editorState={editorState} className="ml-auto" />
       </div>
       <div className="max-w-4xl mx-auto mt-12">
         <input

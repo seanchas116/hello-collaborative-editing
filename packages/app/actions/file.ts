@@ -111,4 +111,6 @@ export async function inviteUser(fileID: string, email: string): Promise<void> {
       userId: invitedUser.id,
     })
     .onConflictDoNothing();
+
+  revalidatePath("/editor", "layout");
 }
