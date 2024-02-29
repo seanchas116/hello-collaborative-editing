@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { User } from "@supabase/supabase-js";
 import { db } from "@/db/db";
-import { File, files } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { File, files, permissions } from "@/db/schema";
+import { desc, eq, inArray, or } from "drizzle-orm";
 import { getSubscriptionForUser } from "@/usecases/stripe-subscriptions/get";
 import { SideBar } from "./SideBar";
 import { toDetailedUser } from "@/types/DetailedUser";
@@ -12,7 +12,18 @@ async function getFiles(user: User): Promise<File[]> {
   return await db
     .select()
     .from(files)
-    .where(eq(files.ownerId, user.id))
+    .where(
+      or(
+        eq(files.ownerId, user.id),
+        inArray(
+          files.id,
+          db
+            .select({ fileId: permissions.fileId })
+            .from(permissions)
+            .where(eq(permissions.userId, user.id))
+        )
+      )
+    )
     .orderBy(desc(files.createdAt));
 }
 
