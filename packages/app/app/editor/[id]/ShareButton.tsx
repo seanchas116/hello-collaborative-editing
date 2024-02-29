@@ -86,10 +86,10 @@ export const ShareButton: React.FC<{
                   </Avatar>
                   <div>
                     <p className="text-sm font-medium leading-none">
-                      {permission.user.email}
+                      {toDetailedUser(permission.user).name}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {toDetailedUser(permission.user).name}
+                      {permission.user.email}
                     </p>
                   </div>
                 </div>
