@@ -18,10 +18,12 @@ export default async function EditorPage({
     redirect("/");
   }
 
-  const [file] = await db
-    .select()
-    .from(files)
-    .where(and(eq(files.ownerId, data.user.id), eq(files.id, id)));
+  const file = await db.query.files.findFirst({
+    where: and(eq(files.ownerId, data.user.id), eq(files.id, id)),
+    with: {
+      permissions: true,
+    },
+  });
 
   if (!file) {
     redirect("/editor");

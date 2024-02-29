@@ -3,7 +3,7 @@ import * as awarenessProtocol from "y-protocols/awareness.js";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import { generateCollaborativeAuthToken, updateFile } from "@/actions/file";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { File } from "@/db/schema";
+import { File, Permission } from "@/db/schema";
 import debounce from "just-debounce-it";
 import { DetailedUser } from "@/types/DetailedUser";
 
@@ -14,7 +14,7 @@ const messageTypes = {
 
 interface EditorStateOptions {
   user: DetailedUser;
-  fileInfo: File;
+  fileInfo: File & { permissions: Permission[] };
 }
 
 export class EditorState {
@@ -36,7 +36,7 @@ export class EditorState {
   readonly disposers: (() => void)[] = [];
 
   @observable isLoaded = false;
-  @observable.ref fileInfo: File;
+  @observable.ref fileInfo: File & { permissions: Permission[] };
   @observable fileName = "";
 
   @action async updateFileName(name: string) {

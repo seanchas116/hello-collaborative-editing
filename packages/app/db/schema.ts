@@ -10,7 +10,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "./supabase-schema";
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
 
 // https://github.com/drizzle-team/drizzle-orm/issues/1511#issuecomment-1824687669
 const customJsonb = <TData>(name: string) =>
@@ -34,6 +34,10 @@ export const files = pgTable("files", {
   updatedAt: timestamp("updatedAt").defaultNow(),
 });
 
+export const filesRelations = relations(files, ({ many }) => ({
+  permissions: many(permissions),
+}));
+
 export const permissions = pgTable(
   "permissions",
   {
@@ -52,6 +56,13 @@ export const permissions = pgTable(
     };
   }
 );
+
+export const permissionsRelations = relations(permissions, ({ one }) => ({
+  file: one(files, {
+    fields: [permissions.fileId],
+    references: [files.id],
+  }),
+}));
 
 export const stripeCustomers = pgTable("stripe_customers", {
   userId: uuid("id")
