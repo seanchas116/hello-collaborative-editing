@@ -14,7 +14,7 @@ import twColors from "tailwindcss/colors";
 import { observer } from "mobx-react-lite";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ShareButton } from "./ShareButton";
-import { DetailedUser } from "@/types/DetailedUser";
+import { DetailedUser } from "@/models/entities/detailed-user";
 
 const userColors = [
   twColors.blue[500],

@@ -5,7 +5,7 @@ import { generateCollaborativeAuthToken, updateFile } from "@/actions/file";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { File, Permission } from "@/db/schema";
 import debounce from "just-debounce-it";
-import { DetailedUser } from "@/types/DetailedUser";
+import { DetailedUser } from "@/models/entities/detailed-user";
 import { User } from "@supabase/supabase-js";
 
 const messageTypes = {

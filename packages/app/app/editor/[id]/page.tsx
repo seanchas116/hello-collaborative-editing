@@ -4,9 +4,9 @@ import { db } from "@/db/db";
 import { files } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { EditorWrap } from "./EditorWrap";
-import { toDetailedUser } from "@/types/DetailedUser";
+import { toDetailedUser } from "@/models/entities/detailed-user";
 import { ExtendedFile } from "./EditorState";
-import { canAccess } from "@/app/entities/file";
+import { canAccess } from "@/models/entities/file";
 
 export default async function EditorPage({
   params: { id: fileID },

@@ -3,8 +3,8 @@
 import Stripe from "stripe";
 import { stripe } from "@/utils/stripe/config";
 import { createClient } from "@/utils/supabase/server";
-import { getOrCreateStripeCustomer } from "@/usecases/stripe-customers/get-or-create";
-import { changeSubscriptionQuantity } from "@/usecases/stripe-subscriptions/update";
+import { getOrCreateStripeCustomer } from "@/models/usecases/stripe-customers/get-or-create";
+import { changeSubscriptionQuantity } from "@/models/usecases/stripe-subscriptions/update";
 import { revalidatePath } from "next/cache";
 
 export async function changeQuantity(quantity: number): Promise<void> {

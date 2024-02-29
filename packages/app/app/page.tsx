@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { SignInButton } from "./SignInButton";
-import { toDetailedUser } from "@/types/DetailedUser";
+import { toDetailedUser } from "@/models/entities/detailed-user";
 
 async function LaunchButton() {
   const supabase = createClient();

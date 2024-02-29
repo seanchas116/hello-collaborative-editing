@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { createFile } from "@/actions/file";
 import { useToast } from "@/components/ui/use-toast";
 import NProgress from "nprogress";
-import { DetailedUser } from "@/types/DetailedUser";
+import { DetailedUser } from "@/models/entities/detailed-user";
 
 export const SideBar: React.FC<{
   user: DetailedUser;

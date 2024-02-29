@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import { and, eq } from "drizzle-orm";
 import { User } from "@supabase/supabase-js";
 import { authUsers } from "@/db/supabase-schema";
-import { canAccess } from "@/app/entities/file";
+import { canAccess } from "@/models/entities/file";
 
 async function authenticateUser(): Promise<User> {
   const supabase = createClient();

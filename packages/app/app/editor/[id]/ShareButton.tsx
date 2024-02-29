@@ -4,7 +4,7 @@ import { PopoverTrigger } from "@radix-ui/react-popover";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { DetailedUser, toDetailedUser } from "@/types/DetailedUser";
+import { DetailedUser, toDetailedUser } from "@/models/entities/detailed-user";
 import { inviteUser, removeInvitedUser } from "@/actions/file";
 import { EditorState } from "./EditorState";
 import { Icon } from "@iconify/react/dist/iconify.js";
