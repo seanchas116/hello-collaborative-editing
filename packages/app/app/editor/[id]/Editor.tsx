@@ -11,11 +11,11 @@ import { twMerge } from "tailwind-merge";
 import { EditorState } from "./EditorState";
 import styled from "styled-components";
 import twColors from "tailwindcss/colors";
-import { User } from "@supabase/supabase-js";
 import { observer } from "mobx-react-lite";
 import { File } from "@/db/schema";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ShareButton } from "./ShareButton";
+import { DetailedUser } from "@/types/DetailedUser";
 
 const userColors = [
   twColors.blue[500],
@@ -59,7 +59,7 @@ const StyledEditorContent = styled(EditorContent)`
 
 export const Editor: React.FC<{
   className?: string;
-  user: User;
+  user: DetailedUser;
   fileInfo: File;
 }> = ({ className, user, fileInfo }) => {
   const [editorState, setEditorState] = React.useState<EditorState | null>(
@@ -130,7 +130,7 @@ const EditorImpl: React.FC<{
   return editorState.isLoaded ? (
     <div className={twMerge("px-16", className)}>
       <div className="flex py-4">
-        <ShareButton className="ml-auto" />
+        <ShareButton user={editorState.user} className="ml-auto" />
       </div>
       <div className="max-w-4xl mx-auto mt-12">
         <input

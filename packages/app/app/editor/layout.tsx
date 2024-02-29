@@ -6,6 +6,7 @@ import { File, files } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { getSubscriptionForUser } from "@/usecases/stripe-subscriptions/get";
 import { SideBar } from "./SideBar";
+import { toDetailedUser } from "@/types/DetailedUser";
 
 async function getFiles(user: User): Promise<File[]> {
   return await db
@@ -38,7 +39,7 @@ export default async function EditorLayout({
   return (
     <main className="flex">
       <SideBar
-        user={user}
+        user={toDetailedUser(user)}
         isPremium={subscription?.status === "active"}
         seatCount={subscription?.quantity ?? 0}
         files={files}

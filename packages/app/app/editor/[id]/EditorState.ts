@@ -1,11 +1,11 @@
 import * as Y from "yjs";
 import * as awarenessProtocol from "y-protocols/awareness.js";
-import { User } from "@supabase/supabase-js";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import { generateCollaborativeAuthToken, updateFile } from "@/actions/file";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { File } from "@/db/schema";
 import debounce from "just-debounce-it";
+import { DetailedUser } from "@/types/DetailedUser";
 
 const messageTypes = {
   update: 1,
@@ -13,7 +13,7 @@ const messageTypes = {
 } as const;
 
 interface EditorStateOptions {
-  user: User;
+  user: DetailedUser;
   fileInfo: File;
 }
 
@@ -29,7 +29,7 @@ export class EditorState {
     void this.openConnection();
   }
 
-  readonly user: User;
+  readonly user: DetailedUser;
   readonly fileID: string;
   readonly ydoc: Y.Doc;
   readonly awareness: awarenessProtocol.Awareness;

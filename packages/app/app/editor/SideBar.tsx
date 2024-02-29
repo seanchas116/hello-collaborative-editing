@@ -14,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
 import {
   changeQuantity,
   checkoutWithStripe as createStripeCheckoutURL,
@@ -24,9 +23,10 @@ import { Button } from "@/components/ui/button";
 import { createFile } from "@/actions/file";
 import { useToast } from "@/components/ui/use-toast";
 import NProgress from "nprogress";
+import { DetailedUser } from "@/types/DetailedUser";
 
 export const SideBar: React.FC<{
-  user: User;
+  user: DetailedUser;
   isPremium: boolean;
   files: File[];
   fileID?: string;
@@ -37,9 +37,6 @@ export const SideBar: React.FC<{
   const { toast } = useToast();
 
   const supabase = createClient();
-
-  const userName = user?.user_metadata.name;
-  const userPicture = user?.user_metadata.picture;
 
   const router = useRouter();
 
@@ -106,8 +103,8 @@ export const SideBar: React.FC<{
       <div className="m-2 flex flex-col">
         <DropdownMenu>
           <DropdownMenuTrigger className="items-center flex gap-2 p-2 rounded-full aria-expanded:bg-gray-100 hover:bg-gray-100">
-            <img className="w-8 h-8 rounded-full" src={userPicture} />
-            <div className="text-gray-900 font-medium text-sm">{userName}</div>
+            <img className="w-8 h-8 rounded-full" src={user.picture} />
+            <div className="text-gray-900 font-medium text-sm">{user.name}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Billing</DropdownMenuLabel>

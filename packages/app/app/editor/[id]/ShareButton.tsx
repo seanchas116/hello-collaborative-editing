@@ -1,14 +1,15 @@
 import React from "react";
 import { Popover, PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { DetailedUser } from "@/types/DetailedUser";
 
 export const ShareButton: React.FC<{
+  user: DetailedUser;
   className?: string;
-}> = ({ className }) => {
+}> = ({ user, className }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -39,14 +40,12 @@ export const ShareButton: React.FC<{
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar>
-                <AvatarImage src="/avatars/03.png" alt="Image" />
-                <AvatarFallback>OM</AvatarFallback>
+                <AvatarImage src={user.picture} alt="Image" />
+                <AvatarFallback>IN</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium leading-none">
-                  Olivia Martin
-                </p>
-                <p className="text-sm text-muted-foreground">m@example.com</p>
+                <p className="text-sm font-medium leading-none">{user.name}</p>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
               </div>
             </div>
             <div>Owner</div>

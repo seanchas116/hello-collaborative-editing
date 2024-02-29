@@ -4,6 +4,7 @@ import { db } from "@/db/db";
 import { files } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { EditorWrap } from "./EditorWrap";
+import { toDetailedUser } from "@/types/DetailedUser";
 
 export default async function EditorPage({
   params: { id },
@@ -26,5 +27,5 @@ export default async function EditorPage({
     redirect("/editor");
   }
 
-  return <EditorWrap user={data.user} fileInfo={file} />;
+  return <EditorWrap user={toDetailedUser(data.user)} fileInfo={file} />;
 }
