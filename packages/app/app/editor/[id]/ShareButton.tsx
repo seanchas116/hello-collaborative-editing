@@ -9,11 +9,14 @@ import { inviteUser } from "@/actions/file";
 import { EditorState } from "./EditorState";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { observer } from "mobx-react-lite";
+import { useToast } from "@/components/ui/use-toast";
 
 export const ShareButton: React.FC<{
   editorState: EditorState;
   className?: string;
 }> = observer(({ editorState, className }) => {
+  const { toast } = useToast();
+
   const user = editorState.user;
   const [email, setEmail] = useState("");
   const [isInviting, setIsInviting] = useState(false);
@@ -45,6 +48,12 @@ export const ShareButton: React.FC<{
                 try {
                   setIsInviting(true);
                   await inviteUser(editorState.fileID, email);
+                } catch (e) {
+                  toast({
+                    variant: "destructive",
+                    title: "Couldn't invite the user.",
+                    description: String(e),
+                  });
                 } finally {
                   setIsInviting(false);
                 }
