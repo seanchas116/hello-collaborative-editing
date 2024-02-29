@@ -3,6 +3,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uuid,
@@ -33,15 +34,24 @@ export const files = pgTable("files", {
   updatedAt: timestamp("updatedAt").defaultNow(),
 });
 
-export const permissionTypeEnum = pgEnum("permission_type", ["read", "write"]);
-
-export const permissions = pgTable("permissions", {
-  userId: uuid("userId").references(() => authUsers.id, {
-    onDelete: "cascade",
-  }),
-  fileId: uuid("fileId").references(() => files.id, { onDelete: "cascade" }),
-  type: permissionTypeEnum("type"),
-});
+export const permissions = pgTable(
+  "permissions",
+  {
+    userId: uuid("userId")
+      .notNull()
+      .references(() => authUsers.id, {
+        onDelete: "cascade",
+      }),
+    fileId: uuid("fileId")
+      .notNull()
+      .references(() => files.id, { onDelete: "cascade" }),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.userId, table.fileId] }),
+    };
+  }
+);
 
 export const stripeCustomers = pgTable("stripe_customers", {
   userId: uuid("id")
@@ -75,7 +85,6 @@ export const stripeSubscriptions = pgTable("stripe_subscriptions", {
 
 export type File = InferSelectModel<typeof files>;
 export type Permission = InferSelectModel<typeof permissions>;
-export type PermissionType = (typeof permissionTypeEnum.enumValues)[number];
 export type StripeCustomer = InferSelectModel<typeof stripeCustomers>;
 export type StripeSubscription = InferSelectModel<typeof stripeSubscriptions>;
 export type StripeSubscriptionInsert = InferInsertModel<

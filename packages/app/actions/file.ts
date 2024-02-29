@@ -1,14 +1,16 @@
 "use server";
 
 import { db } from "@/db/db";
-import { File, files } from "@/db/schema";
+import { File, files, permissions } from "@/db/schema";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import { and, eq } from "drizzle-orm";
+import { User } from "@supabase/supabase-js";
+import { authUsers } from "@/db/supabase-schema";
 
-export async function createFile() {
+async function authenticateUser(): Promise<User> {
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.getUser();
@@ -16,10 +18,16 @@ export async function createFile() {
     throw new Error("User not found");
   }
 
+  return data.user;
+}
+
+export async function createFile() {
+  const user = await authenticateUser();
+
   const [file] = await db
     .insert(files)
     .values({
-      ownerId: data.user.id,
+      ownerId: user.id,
       name: "New File",
     })
     .returning();
@@ -29,20 +37,15 @@ export async function createFile() {
 }
 
 export async function updateFile(
-  id: string,
+  fileID: string,
   values: { name: string }
 ): Promise<File> {
-  const supabase = createClient();
-
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    throw new Error("User not found");
-  }
+  const user = await authenticateUser();
 
   const results = await db
     .update(files)
     .set(values)
-    .where(and(eq(files.ownerId, data.user.id), eq(files.id, id)))
+    .where(and(eq(files.ownerId, user.id), eq(files.id, fileID)))
     .returning();
 
   revalidatePath("/editor", "layout");
@@ -51,12 +54,7 @@ export async function updateFile(
 }
 
 export async function generateCollaborativeAuthToken(fileID: string) {
-  const supabase = createClient();
-
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    throw new Error("User not found");
-  }
+  const user = await authenticateUser();
 
   const secret = process.env.COLLABORATIVE_EDITING_JWT_SECRET;
   if (!secret) {
@@ -64,8 +62,12 @@ export async function generateCollaborativeAuthToken(fileID: string) {
   }
 
   // check if the user has access to the file
-  const [file] = await db.select().from(files).where(eq(files.id, fileID));
-  if (!file || file.ownerId !== data.user.id) {
+  const [file] = await db
+    .select()
+    .from(files)
+    .where(and(eq(files.ownerId, user.id), eq(files.id, fileID)));
+
+  if (!file) {
     throw new Error("User does not have access to the file");
   }
 
@@ -79,4 +81,34 @@ export async function generateCollaborativeAuthToken(fileID: string) {
   );
 
   return token;
+}
+
+export async function inviteUser(fileID: string, email: string): Promise<void> {
+  const user = await authenticateUser();
+
+  // check if the user has access to the file
+  const [file] = await db
+    .select()
+    .from(files)
+    .where(and(eq(files.ownerId, user.id), eq(files.id, fileID)));
+
+  if (!file) {
+    throw new Error("User does not have access to the file");
+  }
+
+  const invitedUser = (
+    await db.select().from(authUsers).where(eq(authUsers.email, email))
+  ).at(0);
+
+  if (!invitedUser) {
+    throw new Error("User not found");
+  }
+
+  await db
+    .insert(permissions)
+    .values({
+      fileId: fileID,
+      userId: invitedUser.id,
+    })
+    .onConflictDoNothing();
 }
