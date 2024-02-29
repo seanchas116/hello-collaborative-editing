@@ -11,18 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { authUsers } from "./supabase-schema";
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
-
-// https://github.com/drizzle-team/drizzle-orm/issues/1511#issuecomment-1824687669
-const customJsonb = <TData>(name: string) =>
-  customType<{ data: TData; driverData: string }>({
-    dataType() {
-      return "jsonb";
-    },
-    // @ts-ignore
-    toDriver(value: TData) {
-      return value;
-    },
-  })(name);
+import { customJsonb } from "./custom-jsonb";
 
 export const files = pgTable("files", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -61,6 +50,10 @@ export const permissionsRelations = relations(permissions, ({ one }) => ({
   file: one(files, {
     fields: [permissions.fileId],
     references: [files.id],
+  }),
+  user: one(authUsers, {
+    fields: [permissions.userId],
+    references: [authUsers.id],
   }),
 }));
 

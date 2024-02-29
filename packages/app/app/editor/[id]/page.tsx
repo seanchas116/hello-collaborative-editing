@@ -5,6 +5,7 @@ import { files } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { EditorWrap } from "./EditorWrap";
 import { toDetailedUser } from "@/types/DetailedUser";
+import { ExtendedFile } from "./EditorState";
 
 export default async function EditorPage({
   params: { id },
@@ -21,7 +22,11 @@ export default async function EditorPage({
   const file = await db.query.files.findFirst({
     where: and(eq(files.ownerId, data.user.id), eq(files.id, id)),
     with: {
-      permissions: true,
+      permissions: {
+        with: {
+          user: true,
+        },
+      },
     },
   });
 
@@ -29,5 +34,10 @@ export default async function EditorPage({
     redirect("/editor");
   }
 
-  return <EditorWrap user={toDetailedUser(data.user)} fileInfo={file} />;
+  return (
+    <EditorWrap
+      user={toDetailedUser(data.user)}
+      fileInfo={file as any as ExtendedFile}
+    />
+  );
 }

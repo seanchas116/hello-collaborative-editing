@@ -8,11 +8,10 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import React, { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
-import { EditorState } from "./EditorState";
+import { EditorState, ExtendedFile } from "./EditorState";
 import styled from "styled-components";
 import twColors from "tailwindcss/colors";
 import { observer } from "mobx-react-lite";
-import { File, Permission } from "@/db/schema";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ShareButton } from "./ShareButton";
 import { DetailedUser } from "@/types/DetailedUser";
@@ -60,7 +59,7 @@ const StyledEditorContent = styled(EditorContent)`
 export const Editor: React.FC<{
   className?: string;
   user: DetailedUser;
-  fileInfo: File & { permissions: Permission[] };
+  fileInfo: ExtendedFile;
 }> = ({ className, user, fileInfo }) => {
   const [editorState, setEditorState] = React.useState<EditorState | null>(
     null

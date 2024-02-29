@@ -6,15 +6,22 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import { File, Permission } from "@/db/schema";
 import debounce from "just-debounce-it";
 import { DetailedUser } from "@/types/DetailedUser";
+import { User } from "@supabase/supabase-js";
 
 const messageTypes = {
   update: 1,
   awareness: 2,
 } as const;
 
+export interface ExtendedFile extends File {
+  permissions: (Permission & {
+    user: User;
+  })[];
+}
+
 interface EditorStateOptions {
   user: DetailedUser;
-  fileInfo: File & { permissions: Permission[] };
+  fileInfo: ExtendedFile;
 }
 
 export class EditorState {
@@ -36,7 +43,7 @@ export class EditorState {
   readonly disposers: (() => void)[] = [];
 
   @observable isLoaded = false;
-  @observable.ref fileInfo: File & { permissions: Permission[] };
+  @observable.ref fileInfo: ExtendedFile;
   @observable fileName = "";
 
   @action async updateFileName(name: string) {

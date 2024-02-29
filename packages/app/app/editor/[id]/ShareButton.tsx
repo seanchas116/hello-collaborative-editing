@@ -4,7 +4,7 @@ import { PopoverTrigger } from "@radix-ui/react-popover";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { DetailedUser } from "@/types/DetailedUser";
+import { DetailedUser, toDetailedUser } from "@/types/DetailedUser";
 import { inviteUser } from "@/actions/file";
 import { EditorState } from "./EditorState";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -86,10 +86,10 @@ export const ShareButton: React.FC<{
                   </Avatar>
                   <div>
                     <p className="text-sm font-medium leading-none">
-                      {permission.userId}
+                      {permission.user.email}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {permission.userId}
+                      {toDetailedUser(permission.user).name}
                     </p>
                   </div>
                 </div>
