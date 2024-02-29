@@ -169,6 +169,7 @@ export const SideBar: React.FC<{
                 await supabase.auth.signOut();
                 NProgress.done();
                 router.push("/");
+                router.refresh();
               }}
             >
               Sign Out
