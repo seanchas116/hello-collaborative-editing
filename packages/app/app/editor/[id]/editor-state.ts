@@ -7,6 +7,7 @@ import { File, Permission } from "@/db/schema";
 import debounce from "just-debounce-it";
 import { DetailedUser } from "@/models/entities/detailed-user";
 import { User } from "@supabase/supabase-js";
+import twColors from "tailwindcss/colors";
 
 const messageTypes = {
   update: 1,
@@ -20,10 +21,39 @@ export interface ExtendedFile extends File {
   owner: User;
 }
 
+export interface AwarenessUser {
+  id: string;
+  name: string;
+  picture?: string;
+  color: string;
+}
+
 interface EditorStateOptions {
   user: DetailedUser;
   fileInfo: ExtendedFile;
 }
+
+const userColors = (
+  [
+    "red",
+    "orange",
+    "amber",
+    "yellow",
+    "lime",
+    "green",
+    "emerald",
+    "teal",
+    "cyan",
+    "sky",
+    "blue",
+    "indigo",
+    "violet",
+    "purple",
+    "fuchsia",
+    "pink",
+    "rose",
+  ] as const
+).map((color) => twColors[color][500]);
 
 export class EditorState {
   constructor({ user, fileInfo }: EditorStateOptions) {
@@ -46,6 +76,17 @@ export class EditorState {
   @observable isLoaded = false;
   @observable.ref fileInfo: ExtendedFile;
   @observable fileName = "";
+
+  get awarenessUser(): AwarenessUser {
+    return {
+      id: this.user.id,
+      name: this.user.name,
+      picture: this.user.picture,
+      color: userColors[this.ydoc.clientID % userColors.length],
+    };
+  }
+
+  @observable.ref awarenessUsers: [number, AwarenessUser][] = [];
 
   @action async updateFileName(name: string) {
     this.fileName = name;
@@ -86,6 +127,18 @@ export class EditorState {
         updated: number[];
         removed: number[];
       }) => {
+        const awarenessUsers: [number, AwarenessUser][] = [];
+        for (const [clientID, state] of this.awareness.getStates()) {
+          console.log(state.user);
+          if (state.user?.id) {
+            awarenessUsers.push([clientID, state.user]);
+          }
+        }
+        runInAction(() => {
+          console.log(awarenessUsers);
+          this.awarenessUsers = awarenessUsers;
+        });
+
         const changedClients = added.concat(updated).concat(removed);
         const update = awarenessProtocol.encodeAwarenessUpdate(
           this.awareness,

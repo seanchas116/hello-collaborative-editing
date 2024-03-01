@@ -15,15 +15,8 @@ import { observer } from "mobx-react-lite";
 import { LoadingOverlay } from "./loading-overlay";
 import { ShareButton } from "./share-button";
 import { DetailedUser } from "@/models/entities/detailed-user";
-
-const userColors = [
-  twColors.blue[500],
-  twColors.green[500],
-  twColors.pink[500],
-  twColors.purple[500],
-  twColors.red[500],
-  twColors.yellow[500],
-];
+import { client } from "@/db/db";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const StyledEditorContent = styled(EditorContent)`
   .tiptap {
@@ -118,18 +111,35 @@ const EditorImpl: React.FC<{
             return editorState.awareness;
           }
         })(),
-        user: {
-          name: editorState.user.user_metadata.name,
-          color: userColors[editorState.ydoc.clientID % userColors.length],
-        },
+        user: editorState.awarenessUser,
       }),
     ],
   });
 
   return editorState.isLoaded ? (
     <div className={twMerge("px-16", className)}>
-      <div className="flex py-4">
-        <ShareButton editorState={editorState} className="ml-auto" />
+      <div className="flex py-4 gap-4">
+        <div className="flex gap-1 items-center ml-auto">
+          {editorState.awarenessUsers.map(([clientID, user], i) => {
+            if (clientID === editorState.ydoc.clientID) {
+              return null;
+            }
+
+            return (
+              <Avatar
+                key={clientID}
+                className="w-6 h-6 border-2"
+                style={{
+                  borderColor: user.color,
+                }}
+              >
+                <AvatarImage src={user.picture} alt={user.name} />
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+            );
+          })}
+        </div>
+        <ShareButton editorState={editorState} />
       </div>
       <div className="max-w-4xl mx-auto mt-12">
         <input
