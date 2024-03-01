@@ -1,4 +1,4 @@
-# [WIP] Collaborative Editor Example with Next.js + Supabase + Cloudflare Durable Objects
+# Collaborative Editor Example with Next.js + Supabase + Cloudflare Durable Objects
 
 - Next.js for the frontend
 - Supabase for auth and database
