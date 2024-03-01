@@ -151,6 +151,19 @@ export class EditorState {
       }
     );
 
+    const onBeforeUnload = () => {
+      awarenessProtocol.removeAwarenessStates(
+        this.awareness,
+        [this.ydoc.clientID],
+        "window unload"
+      );
+    };
+
+    window.addEventListener("beforeunload", onBeforeUnload);
+    this.disposers.push(() => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    });
+
     ws.addEventListener("message", (event) => {
       console.log("message", event.data);
 
