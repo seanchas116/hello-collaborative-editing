@@ -56,42 +56,40 @@ export class FileDurableObject {
 	private async handleSession(ws: WebSocket) {
 		const update = await this.loadUpdates();
 
-		ws.accept();
+		this.state.acceptWebSocket(ws);
+
 		this.sessions.add(ws);
 		ws.send(encodeMessage('update', update));
+	}
 
-		const onCloseOrError = () => {
-			this.sessions.delete(ws);
-			// TODO: delete awareness
-		};
+	async webSocketMessage(ws: WebSocket, data: ArrayBuffer | string) {
+		if (typeof data === 'string') {
+			throw new Error('Invalid message type');
+		}
 
-		ws.addEventListener('close', onCloseOrError);
-		ws.addEventListener('error', onCloseOrError);
+		const message = decodeMessage(new Uint8Array(data));
 
-		ws.addEventListener('message', async (event) => {
-			if (!(event.data instanceof ArrayBuffer)) {
-				return;
-			}
-			const message = decodeMessage(new Uint8Array(event.data));
-
-			switch (message.type) {
-				case 'awareness':
-					for (const session of this.sessions) {
-						if (session !== ws) {
-							session.send(event.data);
-						}
+		switch (message.type) {
+			case 'awareness':
+				for (const session of this.sessions) {
+					if (session !== ws) {
+						session.send(data);
 					}
-					break;
-				case 'update':
-					for (const session of this.sessions) {
-						if (session !== ws) {
-							session.send(event.data);
-						}
+				}
+				break;
+			case 'update':
+				for (const session of this.sessions) {
+					if (session !== ws) {
+						session.send(data);
 					}
-					await this.storeUpdate(message.data);
-					break;
-			}
-		});
+				}
+				await this.storeUpdate(message.data);
+				break;
+		}
+	}
+
+	async webSocketClose(ws: WebSocket, code: number, reason: string, wasClean: boolean) {
+		this.sessions.delete(ws);
 	}
 
 	private async storeUpdate(update: Uint8Array) {
