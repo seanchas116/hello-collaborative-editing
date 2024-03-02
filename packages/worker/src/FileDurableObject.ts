@@ -55,10 +55,7 @@ export class FileDurableObject {
 
 	private async handleSession(ws: WebSocket) {
 		const update = await this.loadUpdates();
-
 		this.state.acceptWebSocket(ws);
-
-		this.sessions.add(ws);
 		ws.send(encodeMessage('update', update));
 	}
 
@@ -69,18 +66,20 @@ export class FileDurableObject {
 
 		const message = decodeMessage(new Uint8Array(data));
 
+		const webSockets = this.state.getWebSockets();
+
 		switch (message.type) {
 			case 'awareness':
-				for (const session of this.sessions) {
-					if (session !== ws) {
-						session.send(data);
+				for (const w of webSockets) {
+					if (w !== ws) {
+						w.send(data);
 					}
 				}
 				break;
 			case 'update':
-				for (const session of this.sessions) {
-					if (session !== ws) {
-						session.send(data);
+				for (const w of webSockets) {
+					if (w !== ws) {
+						w.send(data);
 					}
 				}
 				await this.storeUpdate(message.data);
@@ -88,8 +87,11 @@ export class FileDurableObject {
 		}
 	}
 
-	async webSocketClose(ws: WebSocket, code: number, reason: string, wasClean: boolean) {
-		this.sessions.delete(ws);
+	async webSocketClose(ws: WebSocket) {
+		// TODO
+	}
+	async webSocketError(ws: WebSocket) {
+		// TODO
 	}
 
 	private async storeUpdate(update: Uint8Array) {
@@ -131,6 +133,4 @@ export class FileDurableObject {
 			return Y.mergeUpdates(updates);
 		});
 	}
-
-	private sessions = new Set<WebSocket>();
 }
