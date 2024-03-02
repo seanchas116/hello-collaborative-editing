@@ -109,10 +109,11 @@ export class FileDurableObject {
 						updates.push(update);
 					}
 				}
+				updates.push(update);
 
-				const update = Y.mergeUpdates(updates);
+				const merged = Y.mergeUpdates(updates);
 
-				await txn.put('update-0', update);
+				await txn.put('update-0', merged);
 				await txn.put('count', 1);
 			}
 		});
