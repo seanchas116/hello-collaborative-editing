@@ -102,18 +102,17 @@ export class FileDurableObject {
 				await txn.put('update-' + count, update);
 				await txn.put('count', count + 1);
 			} else {
-				const updates: Uint8Array[] = [];
+				const ydoc = new Y.Doc();
+
 				for (let i = 0; i < count; i++) {
 					const update = await txn.get('update-' + i);
 					if (update instanceof Uint8Array) {
-						updates.push(update);
+						Y.applyUpdate(ydoc, update);
 					}
 				}
-				updates.push(update);
+				Y.applyUpdate(ydoc, update);
 
-				const merged = Y.mergeUpdates(updates);
-
-				await txn.put('update-0', merged);
+				await txn.put('update-0', Y.encodeStateAsUpdate(ydoc));
 				await txn.put('count', 1);
 			}
 		});
